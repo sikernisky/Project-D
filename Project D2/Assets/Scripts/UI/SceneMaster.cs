@@ -18,11 +18,18 @@ public class SceneMaster : MonoBehaviour
         else SceneManager.LoadScene(sceneName);
     }
 
+    /**Quits the game. */
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     /**Change scene to sceneName after one second. Triggers Fader
      * animation. If sceneName does not exist in build index, does nothing. */
     public void ChangeSceneWithFader(string sceneName)
     {
-        if (Fader != null) StartCoroutine(ChangeSceneWithFaderCoro(sceneName));
+        if (!SceneExists(sceneName)) Debug.Log("Scene does not exist.");
+        else if (Fader != null) StartCoroutine(ChangeSceneWithFaderCoro(sceneName));
         else ChangeScene(sceneName);
     }
 
