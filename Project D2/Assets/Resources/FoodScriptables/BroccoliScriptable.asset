@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
-  m_Name: New Food
+  m_Name: BroccoliScriptable
   m_EditorClassIdentifier: 
-  foodClass: {fileID: 0}
-  inventorySprite: {fileID: 0}
-  greyInventorySprite: {fileID: 0}
+  foodClassName: 
   draggableSprite: {fileID: 0}
+  greyDraggableSprite: {fileID: 0}
   placeSound: {fileID: 0}
+  baseReward: 0
+  pathType: 0

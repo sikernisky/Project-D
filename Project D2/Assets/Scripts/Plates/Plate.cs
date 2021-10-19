@@ -29,7 +29,7 @@ public class Plate : MonoBehaviour
         string output = "";
         foreach(Food food in foodsOnPlate)
         {
-            output += food.Name + ", ";
+            output += food.FoodScriptable.name + ", ";
         }
         return output;
     }

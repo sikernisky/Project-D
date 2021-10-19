@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
 {
     /**The food this slot is holding. */
     public FoodScriptable FoodHolding { get; set; }
@@ -70,7 +71,9 @@ public class InventorySlot : MonoBehaviour
     /**Fills the slot. */
     public void FillSlot(FoodScriptable foodToSet)
     {
+        if (slotImage == null) slotImage = GetComponent<Image>();
         FoodHolding = foodToSet;
+        slotImage.sprite = FoodHolding.slotBackground;
         UpdateSlotWithStockedFood();
         IsEmpty = false;
     }
@@ -78,7 +81,6 @@ public class InventorySlot : MonoBehaviour
     /**Updates the slot to show the item, ready to drag. */
     private void UpdateSlotWithStockedFood()
     {
-        slotImage.sprite = FoodHolding.draggableSprite;
         draggableImage.sprite = FoodHolding.draggableSprite;
         OutOfFood = false;
     }
@@ -86,9 +88,19 @@ public class InventorySlot : MonoBehaviour
     /**Updates the slot to show the item greyed out and unable to drag. */
     private void UpdateSlotWithEmptyFood()
     {
-        slotImage.sprite = FoodHolding.greyDraggableSprite;
         OutOfFood = true;
     }
 
 
+    /**Drags this draggable Image sprite. */
+    public void OnDrag(PointerEventData eventData)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    /**Drops this draggable Image sprite. */
+    public void OnDrop(PointerEventData eventData)
+    {
+        throw new System.NotImplementedException();
+    }
 }

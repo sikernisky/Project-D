@@ -14,6 +14,10 @@ public class FoodScriptable: ScriptableObject
     /**The sprite that represents this Food in the inventory. */
     public Sprite draggableSprite;
 
+    /**The sprite for this item's inventory slot background. 
+     * This is necessary because of shading purposes. */
+    public Sprite slotBackground;
+
     /**The sprite that represents this Food in the inventory when empty. */
     public Sprite greyDraggableSprite;
 
