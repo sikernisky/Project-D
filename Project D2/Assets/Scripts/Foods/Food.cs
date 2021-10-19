@@ -6,12 +6,16 @@ public abstract class Food : MonoBehaviour
 {
 
     public enum PathType { Sweet, Meat, Veggie}
-    public abstract int BaseReward { get; set; }
-    public abstract string Name { get; set; }
-    public abstract PathType Path { get; set; }
 
-    public bool AbilityConditionMet() { return false; }
-    public abstract void PerformAbility();
+    /**The FoodScriptable object of this Food. */
+    public abstract FoodScriptable FoodScriptable { get; set; }
+
+    /**Returns true if this Food should perform its ability.*/
+    public abstract bool AbilityConditionMet();
+
+    /**Performs this Food's main ability.*/
+    public abstract void PerformAbility(Plate plate);
+
 
 
 }

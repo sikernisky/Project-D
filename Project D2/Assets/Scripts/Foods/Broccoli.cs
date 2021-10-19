@@ -4,24 +4,22 @@ using UnityEngine;
 
 public class Broccoli : Food
 {
-    public override int BaseReward { get ; set; }
-    public override string Name { get; set; }
-    public override PathType Path { get; set; }
 
+    public override FoodScriptable FoodScriptable { get; set; }
 
     private void Start()
     {
-        BaseReward = 50;
-        Name = "Broccoli";
-        Path = PathType.Veggie;
+
     }
 
-
-    public override void PerformAbility()
+    public override bool AbilityConditionMet()
     {
-        GameObject target = GameObject.Find("Hello");
-        
-        
+        return false;
+    }
+
+    public override void PerformAbility(Plate plate)
+    {
+        Debug.Log("Performing Broccoli's ability: printing the name of the plate it was passed: " + plate.ToString());
     }
 
 }

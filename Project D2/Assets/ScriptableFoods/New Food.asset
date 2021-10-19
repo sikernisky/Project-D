@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
+  m_Name: New Food
+  m_EditorClassIdentifier: 
+  foodClass: {fileID: 0}
+  inventorySprite: {fileID: 0}
+  greyInventorySprite: {fileID: 0}
+  draggableSprite: {fileID: 0}
+  placeSound: {fileID: 0}
