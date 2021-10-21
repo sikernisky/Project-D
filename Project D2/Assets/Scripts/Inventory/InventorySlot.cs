@@ -26,6 +26,9 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     /**A sprite for the slot background */
     public Sprite defaultSlotSprite;
 
+    /**The Inventory that holds this slot. */
+    public Inventory parentInventory;
+
     /**A TMP_Text controlled by this slot. Details the amount remaining of the item it holds. */
     public TMP_Text numRemainingText;
 
@@ -59,7 +62,6 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
         FoodHolding = null;
         slotImage.sprite = emptySlotSprite;
         draggableImage.gameObject.SetActive(false);
-        FoodRemaining = 0;
         IsEmpty = true;
     }
 
@@ -116,6 +118,10 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
         slotImage.sprite = FoodHolding.slotBackground;
 
         //DELETE ME!!
-        FoodRemaining--;
+        FoodRemaining = parentInventory.DecrementFood(FoodHolding);
     }
+
+
+
+
 }

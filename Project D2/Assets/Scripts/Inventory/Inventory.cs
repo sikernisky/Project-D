@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
 
     public LinkedList<FoodScriptable> OrderedInventoryItems { get; private set; }
 
-    public LinkedList<int> OrderedFoodRemaining { get; private set; }
+    public List<int> OrderedFoodRemaining { get; private set; }
 
     void Start()
     {
@@ -63,7 +63,7 @@ public class Inventory : MonoBehaviour
     private void AssignChildSlotsTheirItems(Dictionary<string, int> itemsToAssign)
     {
         OrderedInventoryItems = new LinkedList<FoodScriptable>();
-        OrderedFoodRemaining = new LinkedList<int>();
+        OrderedFoodRemaining = new List<int>();
 
         int counter = 0;
         foreach (KeyValuePair<string,int> item in itemsToAssign)
@@ -71,21 +71,19 @@ public class Inventory : MonoBehaviour
             FoodScriptable currentFoodScriptable = FoodGenerator.GetFoodScriptableObject(item.Key);
             if(counter < childSlots.Count) childSlots[counter].FillSlot(currentFoodScriptable, item.Value); // fill the slot
             OrderedInventoryItems.AddLast(currentFoodScriptable);
-            OrderedFoodRemaining.AddLast(item.Value);
+            OrderedFoodRemaining.Add(item.Value);
             counter++;
         }
         
     }
 
     /**Fills as many slots as possible from an existing OrderedInventoryItems. */
-    private void AssignChildSlotsTheirItems(LinkedList<FoodScriptable> itemsToAssign, LinkedList<int> foodsRemaining)
+    private void AssignChildSlotsTheirItems(LinkedList<FoodScriptable> itemsToAssign, List<int> foodsRemaining)
     {
         int counter = 0;
         foreach (FoodScriptable item in itemsToAssign)
         {
             if (counter < childSlots.Count) childSlots[counter].FillSlot(item, foodsRemaining.ElementAt(counter)); // fill the slot
-            Debug.Log("Trying ElementAt at counter value " + counter.ToString());
-            Debug.Log(foodsRemaining.ElementAt(counter));
             counter++;
         }
 
@@ -95,11 +93,16 @@ public class Inventory : MonoBehaviour
     {
         if (OrderedInventoryItems.Count <= childSlots.Count) return;
 
-        FoodScriptable firstElement = OrderedInventoryItems.First.Value;
+        FoodScriptable firstElementFoodScriptable = OrderedInventoryItems.First.Value;
         OrderedInventoryItems.RemoveFirst();
-        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedFoodRemaining);
-        OrderedInventoryItems.AddLast(firstElement);
 
+        int firstElementFoodRemaining = OrderedFoodRemaining[0];
+        OrderedFoodRemaining.RemoveAt(0);
+
+        OrderedInventoryItems.AddLast(firstElementFoodScriptable);
+        OrderedFoodRemaining.Insert(OrderedFoodRemaining.Count, firstElementFoodRemaining);
+
+        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedFoodRemaining);
 
     }
 
@@ -107,10 +110,32 @@ public class Inventory : MonoBehaviour
     {
         if (OrderedInventoryItems.Count <= childSlots.Count) return;
 
-        FoodScriptable lastElement = OrderedInventoryItems.Last.Value;
-        OrderedInventoryItems.AddFirst(lastElement);
-        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedFoodRemaining);
-        OrderedInventoryItems.RemoveLast();
+        FoodScriptable lastElementFoodScriptable = OrderedInventoryItems.Last.Value;
+        OrderedInventoryItems.AddFirst(lastElementFoodScriptable);
 
+        int lastElementFoodRemaining = OrderedFoodRemaining[OrderedFoodRemaining.Count - 1];
+        OrderedFoodRemaining.Insert(0,lastElementFoodRemaining);
+
+        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedFoodRemaining);
+
+        OrderedInventoryItems.RemoveLast();
+        OrderedFoodRemaining.RemoveAt(OrderedFoodRemaining.Count -1);
     }
+
+
+    /** Called by an InventorySlot to get the Food it holds to decrement its remaining items by1 . */
+    public int DecrementFood(FoodScriptable foodToDecrement, int byAmount = 1)
+    {
+        int i = 0;
+        foreach(FoodScriptable item in OrderedInventoryItems)
+        {
+            if (item != foodToDecrement) i++;
+            else break;
+        }
+
+        if (OrderedFoodRemaining[i] - byAmount < 0) OrderedFoodRemaining[i] = 0;
+        else OrderedFoodRemaining[i] = OrderedFoodRemaining[i] - byAmount;
+        return OrderedFoodRemaining[i];
+    }
+
 }

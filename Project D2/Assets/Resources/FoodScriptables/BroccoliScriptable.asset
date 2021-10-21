@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: BroccoliScriptable
   m_EditorClassIdentifier: 
   foodClassName: Broccoli
-  draggableSprite: {fileID: 3885838567113389740, guid: bb5c87d23443b0e41aaa6fb9a6db182e, type: 3}
-  slotBackground: {fileID: 0}
-  greyDraggableSprite: {fileID: 3885838567113389740, guid: bb5c87d23443b0e41aaa6fb9a6db182e, type: 3}
+  draggableSprite: {fileID: -6941975027551946901, guid: 8e12f209d6904e3438055751952a28a1, type: 3}
+  slotBackground: {fileID: 6192857904779209107, guid: 8e12f209d6904e3438055751952a28a1, type: 3}
+  greyDraggableSprite: {fileID: -924014382937237087, guid: 8e12f209d6904e3438055751952a28a1, type: 3}
   placeSound: {fileID: 0}
   baseReward: 50
   pathType: 2
