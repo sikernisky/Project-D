@@ -48,7 +48,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     {
         slotImage = GetComponent<Image>();
         if (FoodHolding == null) EmptySlot();
-        ReturnPosition = draggableImage.transform.position;
+        ReturnPosition = draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition;
     }
 
     private void Update()
@@ -114,7 +114,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     /**Drops this draggable Image sprite. */
     public void OnDrop(PointerEventData eventData)
     {
-        draggableImage.gameObject.transform.position = ReturnPosition;
+        draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition = ReturnPosition;
         slotImage.sprite = FoodHolding.slotBackground;
 
         //DELETE ME!!
