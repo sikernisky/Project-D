@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
-  m_Name: DefaultFoodScriptable
+  m_Name: SlicedStrawberryScriptable
   m_EditorClassIdentifier: 
-  foodClassName: Food
+  foodClassName: 
   draggableSprite: {fileID: 0}
   slotBackground: {fileID: 0}
   greyDraggableSprite: {fileID: 0}

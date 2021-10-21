@@ -9,7 +9,7 @@ public class SaveData
 
     public string testName;
 
-    public List<string> itemsToLoadInInventory = new List<string>();
+    public Dictionary<string, int> itemsToLoadInInventory = new Dictionary<string, int>();
 
 
 }

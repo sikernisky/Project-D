@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 118062214}
   - component: {fileID: 118062216}
   - component: {fileID: 118062215}
+  - component: {fileID: 118062217}
   m_Layer: 0
   m_Name: InventoryBase
   m_TagString: Untagged
@@ -201,6 +202,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 118062213}
   m_CullTransparentMesh: 1
+--- !u!114 &118062217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118062213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32a2329d9c6b0345b9f45e4b6f37534, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &334311888
 GameObject:
   m_ObjectHideFlags: 0
@@ -12766,7 +12779,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 6.57}
   m_SizeDelta: {x: 16, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1097991571
@@ -12868,7 +12881,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1350747637
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13248,7 +13261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1586780620
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13399,7 +13412,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1645333361
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13615,7 +13628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   draggableImage: {fileID: 1097991571}
   emptySlotSprite: {fileID: 1321315781982520978, guid: e4675aa4290b92c44a9eee6b70162e18, type: 3}
-  defaultSlotSprite: {fileID: 0}
+  defaultSlotSprite: {fileID: -1394673835398166561, guid: 09871a9fc3dc15a49b84bb5b895be3af, type: 3}
   itemNameText: {fileID: 0}
   numRemainingText: {fileID: 0}
 --- !u!1 &1934736772

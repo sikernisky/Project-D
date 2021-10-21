@@ -18,12 +18,9 @@ public class FoodGenerator
 
     public static FoodScriptable GetFoodScriptableObject(string foodName)
     {
-        switch (foodName) {
-            case "Broccoli":
-                return (FoodScriptable)Resources.Load("FoodScriptables/BroccoliScriptable");
-            default:
-                return (FoodScriptable)Resources.Load("FoodScriptables/DefaultFoodScriptable");
-        }
-
+        try{ return (FoodScriptable)Resources.Load("FoodScriptables/" + foodName + "Scriptable"); }
+        catch{
+            Debug.Log("Caught");
+            return (FoodScriptable)Resources.Load("FoodScriptables/DefaultFoodScriptable");}
     }
 }

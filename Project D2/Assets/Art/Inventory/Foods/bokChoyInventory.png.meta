@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: bb5c87d23443b0e41aaa6fb9a6db182e
+guid: e3150aa71e41fc54ab31afb821ec7ecb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3885838567113389740
-    second: mushroom_in_game_0
+      213: -2475089517179147595
+    second: bokChoyInventory_0
+  - first:
+      213: -3111437565469549236
+    second: bokChoyInventory_1
+  - first:
+      213: -3367293242578187430
+    second: bokChoyInventory_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -106,7 +112,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mushroom_in_game_0
+      name: bokChoyInventory_0
       rect:
         serializedVersion: 2
         x: 0
@@ -114,14 +120,56 @@ TextureImporter:
         width: 16
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ca67e47b6954de530800000000000000
-      internalID: 3885838567113389740
+      spriteID: 5ba6e3d9237b6add0800000000000000
+      internalID: -2475089517179147595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bokChoyInventory_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4d9161f404f1d4d0800000000000000
+      internalID: -3111437565469549236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bokChoyInventory_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5bcd85f2a8f441d0800000000000000
+      internalID: -3367293242578187430
       vertices: []
       indices: 
       edges: []
