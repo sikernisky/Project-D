@@ -5,10 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Food")]
 public class FoodScriptable: ScriptableObject
 {
-    /**This exists to provide data. */
-    public enum PathType { Sweet,Meat,Veggie}
+    /**This class exists to provide data that cannot be determined via script. */
 
-    /**The Food that this Food represents. */
+
+    /**The Food that this Food represents. Only field that is not external data. */
     public string foodClassName;
 
     /**The sprite that represents this Food in the inventory. */
@@ -23,10 +23,6 @@ public class FoodScriptable: ScriptableObject
 
     /**The sound this object makes when placed. */
     public AudioClip placeSound;
-    /**The most basic Em reward of this Food. */
-    public int baseReward;
 
-    /**The path type of this Food. */
-    public PathType pathType;
 
 }

@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Broccoli : Food
 {
+    public override int BASE_REWARD { get; } = 50;
 
-    public override FoodScriptable FoodScriptable { get; set; }
+    public override string NAME { get; } = "Broccoli";
+
+    public override PathType PATH_TYPE { get; } = PathType.Veggie;
 
     private void Start()
     {
-
     }
 
     public override bool AbilityConditionMet()
