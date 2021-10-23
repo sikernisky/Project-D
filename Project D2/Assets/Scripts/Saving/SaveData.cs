@@ -6,6 +6,7 @@ public class SaveData
 {
     /**This class contains data to save */
 
+    public int levelToLoad;
 
     public string testName;
 

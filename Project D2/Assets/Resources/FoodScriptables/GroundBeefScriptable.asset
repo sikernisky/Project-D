@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
   m_Name: GroundBeefScriptable
   m_EditorClassIdentifier: 
-  foodClassName: GroundBeef
+  itemClassName: GroundBeef
   draggableSprite: {fileID: 6212927445393678375, guid: 7a41c72a769f94a4583b3ab2494c71bf, type: 3}
   slotBackground: {fileID: -4807327415928797704, guid: 7a41c72a769f94a4583b3ab2494c71bf, type: 3}
   greyDraggableSprite: {fileID: -8998697877894203847, guid: 7a41c72a769f94a4583b3ab2494c71bf, type: 3}
   placeSound: {fileID: 0}
-  baseReward: 100
-  pathType: 1

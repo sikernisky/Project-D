@@ -1,26 +1,27 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FoodGenerator
 {
-    public static Food GetFoodObject(string foodName)
+    /**Returns the ItemScriptable with the itemName. If not found, returns a default FoodScriptable. */
+    public static ItemScriptable GetScriptableObject(string itemName)
     {
-        GameObject food = new GameObject();
-
-        switch (foodName) {
-            case "Broccoli":
-                return food.AddComponent<Broccoli>();
-            default:
-                return food.AddComponent<Food>();
+        if (Resources.Load("FoodScriptables/" + itemName + "Scriptable") != null)
+        {
+            return (FoodScriptable)Resources.Load("FoodScriptables/" + itemName + "Scriptable");
         }
+        else if (Resources.Load("ConveyorScriptables/" + itemName + "Scriptable") != null)
+        {
+            return (ConveyorScriptable)Resources.Load("ConveyorScriptables/" + itemName + "Scriptable");
+        }
+        return (FoodScriptable)Resources.Load("FoodScriptables/DefaultFoodScriptable");
     }
 
-    public static FoodScriptable GetFoodScriptableObject(string foodName)
+    public static Type GetClassFromString(string itemName)
     {
-        try{ return (FoodScriptable)Resources.Load("FoodScriptables/" + foodName + "Scriptable"); }
-        catch{
-            Debug.Log("Caught");
-            return (FoodScriptable)Resources.Load("FoodScriptables/DefaultFoodScriptable");}
+        Type classFromString = Type.GetType(itemName);
+        return classFromString;
     }
 }

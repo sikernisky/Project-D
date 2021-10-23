@@ -11,9 +11,9 @@ public class Inventory : MonoBehaviour
     /**The GameObject that holds all slots in the Hierarchy. Set in Start(). */
     private GameObject slotMaster;
 
-    public LinkedList<FoodScriptable> OrderedInventoryItems { get; private set; }
+    public LinkedList<ItemScriptable> OrderedInventoryItems { get; private set; }
 
-    public List<int> OrderedFoodRemaining { get; private set; }
+    public List<int> OrderedItemRemaining { get; private set; }
 
     void Start()
     {
@@ -62,28 +62,28 @@ public class Inventory : MonoBehaviour
     /**Sets up OrderedInventoryItems and fills as many slots as possible. */
     private void AssignChildSlotsTheirItems(Dictionary<string, int> itemsToAssign)
     {
-        OrderedInventoryItems = new LinkedList<FoodScriptable>();
-        OrderedFoodRemaining = new List<int>();
+        OrderedInventoryItems = new LinkedList<ItemScriptable>();
+        OrderedItemRemaining = new List<int>();
 
         int counter = 0;
         foreach (KeyValuePair<string,int> item in itemsToAssign)
         {
-            FoodScriptable currentFoodScriptable = FoodGenerator.GetFoodScriptableObject(item.Key);
-            if(counter < childSlots.Count) childSlots[counter].FillSlot(currentFoodScriptable, item.Value); // fill the slot
-            OrderedInventoryItems.AddLast(currentFoodScriptable);
-            OrderedFoodRemaining.Add(item.Value);
+            ItemScriptable currentScriptable = FoodGenerator.GetScriptableObject(item.Key);
+            if(counter < childSlots.Count) childSlots[counter].FillSlot(currentScriptable, item.Value); // fill the slot
+            OrderedInventoryItems.AddLast(currentScriptable);
+            OrderedItemRemaining.Add(item.Value);
             counter++;
         }
         
     }
 
     /**Fills as many slots as possible from an existing OrderedInventoryItems. */
-    private void AssignChildSlotsTheirItems(LinkedList<FoodScriptable> itemsToAssign, List<int> foodsRemaining)
+    private void AssignChildSlotsTheirItems(LinkedList<ItemScriptable> itemsToAssign, List<int> itemsRemaining)
     {
         int counter = 0;
-        foreach (FoodScriptable item in itemsToAssign)
+        foreach (ItemScriptable item in itemsToAssign)
         {
-            if (counter < childSlots.Count) childSlots[counter].FillSlot(item, foodsRemaining.ElementAt(counter)); // fill the slot
+            if (counter < childSlots.Count) childSlots[counter].FillSlot(item, itemsRemaining.ElementAt(counter)); // fill the slot
             counter++;
         }
 
@@ -93,16 +93,16 @@ public class Inventory : MonoBehaviour
     {
         if (OrderedInventoryItems.Count <= childSlots.Count) return;
 
-        FoodScriptable firstElementFoodScriptable = OrderedInventoryItems.First.Value;
+        ItemScriptable firstElementScriptable = OrderedInventoryItems.First.Value;
         OrderedInventoryItems.RemoveFirst();
 
-        int firstElementFoodRemaining = OrderedFoodRemaining[0];
-        OrderedFoodRemaining.RemoveAt(0);
+        int firstElementRemaining = OrderedItemRemaining[0];
+        OrderedItemRemaining.RemoveAt(0);
 
-        OrderedInventoryItems.AddLast(firstElementFoodScriptable);
-        OrderedFoodRemaining.Insert(OrderedFoodRemaining.Count, firstElementFoodRemaining);
+        OrderedInventoryItems.AddLast(firstElementScriptable);
+        OrderedItemRemaining.Insert(OrderedItemRemaining.Count, firstElementRemaining);
 
-        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedFoodRemaining);
+        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedItemRemaining);
 
     }
 
@@ -110,32 +110,32 @@ public class Inventory : MonoBehaviour
     {
         if (OrderedInventoryItems.Count <= childSlots.Count) return;
 
-        FoodScriptable lastElementFoodScriptable = OrderedInventoryItems.Last.Value;
-        OrderedInventoryItems.AddFirst(lastElementFoodScriptable);
+        ItemScriptable lastElementScriptable = OrderedInventoryItems.Last.Value;
+        OrderedInventoryItems.AddFirst(lastElementScriptable);
 
-        int lastElementFoodRemaining = OrderedFoodRemaining[OrderedFoodRemaining.Count - 1];
-        OrderedFoodRemaining.Insert(0,lastElementFoodRemaining);
+        int lastElementRemaining = OrderedItemRemaining[OrderedItemRemaining.Count - 1];
+        OrderedItemRemaining.Insert(0, lastElementRemaining);
 
-        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedFoodRemaining);
+        AssignChildSlotsTheirItems(OrderedInventoryItems, OrderedItemRemaining);
 
         OrderedInventoryItems.RemoveLast();
-        OrderedFoodRemaining.RemoveAt(OrderedFoodRemaining.Count -1);
+        OrderedItemRemaining.RemoveAt(OrderedItemRemaining.Count -1);
     }
 
 
-    /** Called by an InventorySlot to get the Food it holds to decrement its remaining items by1 . */
-    public int DecrementFood(FoodScriptable foodToDecrement, int byAmount = 1)
+    /** Called by an InventorySlot to get the Item it holds to decrement its remaining items by1 . */
+    public int DecrementItem(ItemScriptable itemToDecrement, int byAmount = 1)
     {
         int i = 0;
-        foreach(FoodScriptable item in OrderedInventoryItems)
+        foreach(ItemScriptable item in OrderedInventoryItems)
         {
-            if (item != foodToDecrement) i++;
+            if (item != itemToDecrement) i++;
             else break;
         }
 
-        if (OrderedFoodRemaining[i] - byAmount < 0) OrderedFoodRemaining[i] = 0;
-        else OrderedFoodRemaining[i] = OrderedFoodRemaining[i] - byAmount;
-        return OrderedFoodRemaining[i];
+        if (OrderedItemRemaining[i] - byAmount < 0) OrderedItemRemaining[i] = 0;
+        else OrderedItemRemaining[i] = OrderedItemRemaining[i] - byAmount;
+        return OrderedItemRemaining[i];
     }
 
 }

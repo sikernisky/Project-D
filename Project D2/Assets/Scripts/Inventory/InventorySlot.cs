@@ -7,8 +7,8 @@ using TMPro;
 
 public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
 {
-    /**The food this slot is holding. */
-    public FoodScriptable FoodHolding { get; set; }
+    /**The Item this slot is holding. */
+    public ItemScriptable ItemHolding { get; set; }
 
     /**The number of this slot, dictated by the Inventory class. */
     public int SlotNumber { get; set; }
@@ -16,7 +16,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     /**The image component of this slot. */
     private Image slotImage;
 
-    /**The image component of a child GameObject which holds an item without a background. 
+    /**The image component of a child GameObject which holds an Item without a background. 
        null if the slot is empty. Set in Inspector.*/
     public Image draggableImage;
 
@@ -29,78 +29,78 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     /**The Inventory that holds this slot. */
     public Inventory parentInventory;
 
-    /**A TMP_Text controlled by this slot. Details the amount remaining of the item it holds. */
+    /**A TMP_Text controlled by this slot. Details the amount remaining of the Item it holds. */
     public TMP_Text numRemainingText;
 
-    /**True if this slot holds no food item, false otherwise. */
+    /**True if this slot holds no Item, false otherwise. */
     public bool IsEmpty { get; private set; }
 
-    /**True if this slot is out of food, false otherwise. */
-    public bool OutOfFood { get; private set; }
+    /**True if this slot is out of Item, false otherwise. */
+    public bool OutOfItem { get; private set; }
 
-    /**Number of foods remaining in this slot. */
-    public int FoodRemaining { get; set; }
+    /**Amount of Item remaining in this slot. */
+    public int ItemRemaining { get; set; }
 
-    /**The position this Food's GameObject returns to OnDrop. */
+    /**The position this Item's GameObject returns to OnDrop. */
     public Vector3 ReturnPosition { get; private set; }
 
     private void Start()
     {
         slotImage = GetComponent<Image>();
-        if (FoodHolding == null) EmptySlot();
+        if (ItemHolding == null) EmptySlot();
         ReturnPosition = draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition;
     }
 
     private void Update()
     {
-        MaintainFoodStock();
+        MaintainItemStock();
     }
 
-    /**Empties the slot completely, removing the food inside.*/
+    /**Empties the slot completely, removing the Item inside.*/
     public void EmptySlot()
     {
-        FoodHolding = null;
+        ItemHolding = null;
         slotImage.sprite = emptySlotSprite;
         draggableImage.gameObject.SetActive(false);
         IsEmpty = true;
     }
 
-    /**Updates the slot depending on if there is food remaining.*/
-    public void MaintainFoodStock()
+    /**Updates the slot depending on if there is Item remaining.*/
+    public void MaintainItemStock()
     {
         //!!!! Implement these two lines below when ready.
-        //if (FoodRemaining > 0 && OutOfFood) UpdateSlotWithStockedFood();
-        //else if (FoodRemaining < 1 && !OutOfFood) UpdateSlotWithEmptyFood();\
+        //if (ItemRemaining > 0 && OutOfItem) UpdateSlotWithStockedItem();
+        //else if (ItemRemaining < 1 && !OutOfItem) UpdateSlotWithEmptyItem();\
 
-        numRemainingText.text = FoodRemaining.ToString();
+        numRemainingText.text = ItemRemaining.ToString();
     }
 
     /**Fills the slot. */
-    public void FillSlot(FoodScriptable foodToSet, int numRemaining = 0)
+    public void FillSlot(ItemScriptable itemToSet, int numRemaining = 0)
     {
         if (slotImage == null) slotImage = GetComponent<Image>();
-        FoodHolding = foodToSet;
-        FoodRemaining = numRemaining;
+        ItemHolding = itemToSet;
+        ItemRemaining = numRemaining;
         draggableImage.gameObject.SetActive(true);
-        slotImage.sprite = FoodHolding.slotBackground;
-        UpdateSlotWithStockedFood();
+        slotImage.sprite = itemToSet.slotBackground;
+        UpdateSlotWithStockedItem();
         IsEmpty = false;
     }
 
 
 
     /**Updates the slot to show the item, ready to drag. */
-    private void UpdateSlotWithStockedFood()
+    private void UpdateSlotWithStockedItem()
     {
-        draggableImage.sprite = FoodHolding.draggableSprite;
-        OutOfFood = false;
+        draggableImage.sprite = ItemHolding.draggableSprite;
+        OutOfItem = false;
     }
 
     /**Updates the slot to show the item greyed out and unable to drag. */
-    private void UpdateSlotWithEmptyFood()
+    private void UpdateSlotWithEmptyItem()
     {
-        OutOfFood = true;
-        draggableImage.sprite = FoodHolding.greyDraggableSprite;
+        OutOfItem = true;
+        draggableImage.sprite = ItemHolding.greyDraggableSprite;
     }
 
 
@@ -115,10 +115,10 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition = ReturnPosition;
-        slotImage.sprite = FoodHolding.slotBackground;
+        slotImage.sprite = ItemHolding.slotBackground;
 
         //DELETE ME!!
-        FoodRemaining = parentInventory.DecrementFood(FoodHolding);
+        ItemRemaining = parentInventory.DecrementItem(ItemHolding);
     }
 
 

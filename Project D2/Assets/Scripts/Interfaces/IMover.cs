@@ -11,6 +11,4 @@ public interface IMover
     void GiveItem(GameObject item);
 
     void DestroyItem(GameObject item);
-
-    void CashItemIn(GameObject item, int reward);
 }

@@ -8,7 +8,7 @@ public class Plate : MonoBehaviour
 
     public void AddFoodToPlate(string foodToAdd)
     {
-        foodsOnPlate.Add(FoodGenerator.GetFoodObject(foodToAdd));
+        gameObject.AddComponent(FoodGenerator.GetClassFromString(foodToAdd));
     }
 
     private void Update()

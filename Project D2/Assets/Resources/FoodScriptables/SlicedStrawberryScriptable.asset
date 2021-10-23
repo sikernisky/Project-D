@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
   m_Name: SlicedStrawberryScriptable
   m_EditorClassIdentifier: 
-  foodClassName: SlicedStrawberry
+  itemClassName: SlicedStrawberry
   draggableSprite: {fileID: -4032192604812323734, guid: 5be6cfde183902149b81e39cae5a73f8, type: 3}
   slotBackground: {fileID: 5653695652457991272, guid: 5be6cfde183902149b81e39cae5a73f8, type: 3}
   greyDraggableSprite: {fileID: -97882306308305187, guid: 5be6cfde183902149b81e39cae5a73f8, type: 3}
   placeSound: {fileID: 0}
-  baseReward: 0
-  pathType: 0

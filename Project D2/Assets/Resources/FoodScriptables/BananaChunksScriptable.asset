@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
   m_Name: BananaChunksScriptable
   m_EditorClassIdentifier: 
-  foodClassName: BananaChunks
+  itemClassName: BananaChunks
   draggableSprite: {fileID: 4425361144798180257, guid: 1804361c612eea547a1817f365e50bd4, type: 3}
   slotBackground: {fileID: -7817644521442636337, guid: 1804361c612eea547a1817f365e50bd4, type: 3}
   greyDraggableSprite: {fileID: -5820906235613268684, guid: 1804361c612eea547a1817f365e50bd4, type: 3}
   placeSound: {fileID: 0}
-  baseReward: 0
-  pathType: 0

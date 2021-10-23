@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
   m_Name: MarinatedCarnitasScriptable
   m_EditorClassIdentifier: 
-  foodClassName: MarinatedCarnitas
+  itemClassName: MarinatedCarnitas
   draggableSprite: {fileID: 2577678829554981000, guid: 19fc01143ac2d314a8b4afc8bf2ddfa8, type: 3}
   slotBackground: {fileID: 80316721200997462, guid: 19fc01143ac2d314a8b4afc8bf2ddfa8, type: 3}
   greyDraggableSprite: {fileID: -8525965107890085457, guid: 19fc01143ac2d314a8b4afc8bf2ddfa8, type: 3}
   placeSound: {fileID: 0}
-  baseReward: 0
-  pathType: 1

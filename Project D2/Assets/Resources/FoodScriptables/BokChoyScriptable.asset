@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fa5f7f0e10a5d44c89c1ae90501b489, type: 3}
   m_Name: BokChoyScriptable
   m_EditorClassIdentifier: 
-  foodClassName: BokChoy
+  itemClassName: BokChoy
   draggableSprite: {fileID: -2475089517179147595, guid: e3150aa71e41fc54ab31afb821ec7ecb, type: 3}
   slotBackground: {fileID: -3367293242578187430, guid: e3150aa71e41fc54ab31afb821ec7ecb, type: 3}
   greyDraggableSprite: {fileID: -3111437565469549236, guid: e3150aa71e41fc54ab31afb821ec7ecb, type: 3}
   placeSound: {fileID: 0}
-  baseReward: 0
-  pathType: 0
