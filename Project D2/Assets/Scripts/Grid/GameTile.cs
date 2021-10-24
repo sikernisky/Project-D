@@ -28,7 +28,7 @@ public class GameTile
     /**True if this tile has been created and placed in a GridArray.*/
     public bool TileSetUp { get; private set; }
 
-    private SpriteRenderer tileSpriteRenderer;
+    public SpriteRenderer tileSpriteRenderer;
 
     public GameTile(int x, int y, float worldX, float worldY, GameGrid grid)
     {
@@ -39,11 +39,8 @@ public class GameTile
         WorldY = worldY;
 
         GridIn = grid;
-    }
 
-    public void foo()
-    {
-    
+        Debug.Log("GameTile was created at position " + ToString());
     }
 
     /**Sets the X and Y positions of this tile. 
@@ -79,6 +76,16 @@ public class GameTile
         return "(" + X + ", " + Y + ")";
     }
 
+
+    /** Creates the Tile in the scene. More specifically:
+     *  Creates the GameObject
+     *  Adds a ListenerTile component to detect clicks, hovers, and placements
+     *  Sets the position and scale of the GameObject
+     *  Sets the parent of the GameObject
+     *  Adds a SpriteRenderer component and sets its sprite field to parameter spriteToSet
+     *  Updates its sorting order according to its Grid
+     *  Adds a BoxCollider2D component and sets its size field according to its Grid's cellsize
+     */
     public void CreateRealTile(Sprite spriteToSet)
     {
         GameObject newTile = new GameObject("NewTile");
@@ -86,14 +93,12 @@ public class GameTile
 
         Transform newTileTransform = newTile.transform;
         newTileTransform.localPosition = new Vector2(WorldX, WorldY);
-        newTileTransform.localScale = new Vector2(GridIn.CellSize, GridIn.CellSize);
+        newTileTransform.localScale = new Vector2(GridIn.CellSize +.1f, GridIn.CellSize + .1f);
         newTileTransform.SetParent(GridIn.ParentGameObject);
 
         newTile.AddComponent<SpriteRenderer>().sprite = spriteToSet;
         tileSpriteRenderer = objectHolding.GetComponent<SpriteRenderer>();
         tileSpriteRenderer.sortingOrder = GridIn.SortingOrder;
-
-        newTile.AddComponent<BoxCollider2D>().size = new Vector2(GridIn.CellSize, GridIn.CellSize);
 
         TileSetUp = true;
     }

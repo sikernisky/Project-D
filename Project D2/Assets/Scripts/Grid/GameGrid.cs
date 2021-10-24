@@ -55,6 +55,7 @@ public class GameGrid {
             for(int z = 0; z < GridArray.GetLength(1); z++)
             {
                 Vector3 worldPos = GetWorldPosition(i, z);
+                Debug.Log("WorldX is " + worldPos.x + " and WorldY is " + worldPos.y);
                 GridArray[i, z] = new GameTile(i, z, worldPos.x, worldPos.y, this);
             }
         }

@@ -4,22 +4,28 @@ using UnityEngine;
 
 public class GameGridMaster : MonoBehaviour
 {
-    private const float cellSize = 2f;
+    public const float cellSize = 2f;
 
     /**An array of sprites for ground/base tiles. Assigned in the inspector. */
     public Sprite[] baseTileArray;
 
     /**The Base Game Grid that we operate on.*/
-    public GameGrid BaseGameGrid { get; private set; }
+    public static GameGrid BaseGameGrid { get; private set; }
 
     /**The Moveables Game Grid that we operate on.*/
-    public GameGrid MoveablesGameGrid { get; private set; }
+    public static GameGrid MoveablesGameGrid { get; private set; }
 
     /**The Placeables Game Grid that we operate on.*/
-    public GameGrid PlaceablesGameGrid { get; private set; }
+    public static GameGrid PlaceablesGameGrid { get; private set; }
 
     /**The Game Grid that detects clicks and performs actions with other Grids.*/
-    public GameGrid ListenerGameGrid { get; private set; }
+    public static GameGrid ListenerGameGrid { get; private set; }
+
+    /**The width of all grids in this scene. */
+    public static int GridWidth;
+
+    /**The height of all grids in this scene. */
+    public static int GridHeight;
 
 
     void Start()
@@ -32,6 +38,7 @@ public class GameGridMaster : MonoBehaviour
     {
         GameObject GroundTilemapParent = new GameObject("GroundTilemapMaster");
         GameGrid grid = new GameGrid(width, height, cellSize, GroundTilemapParent.transform);
+        grid.FillAllTiles(baseTileArray);
         return grid;
     }
 
@@ -45,50 +52,57 @@ public class GameGridMaster : MonoBehaviour
     private GameGrid CreatePlaceablesTilemap(int width, int height)
     {
         GameObject PlaceablesTilemap = new GameObject("PlaceablesTilemapMaster");
-        GameGrid grid = new GameGrid(width, height, cellSize, transform, 2);
+        GameGrid grid = new GameGrid(width, height, cellSize, PlaceablesTilemap.transform, 2);
         return grid;
     }
 
+    private GameGrid CreateListenerTilemap(int width, int height)
+    {
+        GameObject ListenerTilemap = new GameObject("ListenerTilemapMaster");
+        GameGrid grid = new GameGrid(width, height, cellSize, ListenerTilemap.transform, 2);
+        grid.FillAllTiles(null);
+        foreach(GameTile tile in grid.GridArray)
+        {
+            tile.objectHolding.AddComponent<ListenerTile>().tileGameTile = tile;
+            tile.objectHolding.GetComponent<ListenerTile>().SetCoordinates(new Vector2(tile.WorldX, tile.WorldY));
+            tile.objectHolding.AddComponent<BoxCollider2D>().size = new Vector2(1, 1);
+        }
+        return grid;
+    }
+
+
     private void GenerateLevel(int levelNumber)
     {
-        int width;
-        int height;
 
         switch (levelNumber)
         {
             case 1:
-                width = 25;
-                height = 25;
+                GridWidth = 40;
+                GridHeight = 40;
                 break;
             default:
-                width = 20;
-                height = 20;
+                GridWidth = 20;
+                GridHeight = 20;
                 return;
         }
 
-        BaseGameGrid = CreateGroundTilemap(width, height);
-        BaseGameGrid.FillAllTiles(baseTileArray);
-
-        MoveablesGameGrid = CreateMoveablesTilemap(width, height);
-
-        PlaceablesGameGrid = CreatePlaceablesTilemap(width, height);
-
-        ListenerGameGrid = CreatePlaceablesTilemap(width, height);
-        BaseGameGrid.FillAllTiles(null);
-
+        SpawnAllGrids(GridWidth, GridHeight);
 
         switch (levelNumber)
         {
             case 1:
                 MoveablesGameGrid.FillTileInGrid(new Vector2(0, 0), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(10, 20), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(13, 43), "DefaultConveyor");
                 break;
             default:
                 return;
         }
     }
 
-
-
+    private void SpawnAllGrids(int width, int height)
+    {
+        BaseGameGrid = CreateGroundTilemap(width, height);
+        MoveablesGameGrid = CreateMoveablesTilemap(width, height);
+        PlaceablesGameGrid = CreatePlaceablesTilemap(width, height);
+        ListenerGameGrid = CreateListenerTilemap(width, height);
+    }
 }
