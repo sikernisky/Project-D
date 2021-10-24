@@ -39,8 +39,6 @@ public class GameTile
         WorldY = worldY;
 
         GridIn = grid;
-
-        Debug.Log("GameTile was created at position " + ToString());
     }
 
     /**Sets the X and Y positions of this tile. 
@@ -57,7 +55,6 @@ public class GameTile
     /**Fills this GameTile with an object. */
     public void FillTile(MoveableScriptable itemToFill)
     {
-        Debug.Log(itemToFill.itemClassName);
         Sprite test = itemToFill.basePlacedSprite;
         if (!TileSetUp) CreateRealTile(itemToFill.basePlacedSprite);
         else tileSpriteRenderer.sprite = itemToFill.basePlacedSprite;
@@ -93,7 +90,7 @@ public class GameTile
 
         Transform newTileTransform = newTile.transform;
         newTileTransform.localPosition = new Vector2(WorldX, WorldY);
-        newTileTransform.localScale = new Vector2(GridIn.CellSize +.1f, GridIn.CellSize + .1f);
+        newTileTransform.localScale = new Vector2(GridIn.CellSize +.01f, GridIn.CellSize + .01f);
         newTileTransform.SetParent(GridIn.ParentGameObject);
 
         newTile.AddComponent<SpriteRenderer>().sprite = spriteToSet;

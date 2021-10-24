@@ -2115,6 +2115,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c60e932245696148b23193b3371d262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minCamSize: 10
+  maxCamSize: 20
+  zoomPerTick: 1
 --- !u!1 &1586780619
 GameObject:
   m_ObjectHideFlags: 0

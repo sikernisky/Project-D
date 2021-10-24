@@ -77,8 +77,8 @@ public class GameGridMaster : MonoBehaviour
         switch (levelNumber)
         {
             case 1:
-                GridWidth = 40;
-                GridHeight = 40;
+                GridWidth = 50;
+                GridHeight = 50;
                 break;
             default:
                 GridWidth = 20;
