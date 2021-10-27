@@ -105,17 +105,6 @@ public class GameGrid {
         return null;
     }
 
-    /**Fills the tile at coordinates.x, coordinates.y with itemToAdd's class representation.
-     * Precondition: itemToAdd must inherit from or be a MoveableScriptable. */
-    public void FillTileInGrid(Vector2 proposedLocation, string itemToAdd, bool addClassComponent = true)
-    {
-        if (!CanPlaceTile(proposedLocation, new Vector2(1, 1))) return; // Make sure tile can be placed.
-        GameTile tileSelected = GetTileFromGrid(proposedLocation);
-        if (tileSelected == null) return; // Tile wasn't in the grid.
-        ItemScriptable itemToAddScriptable = ItemGenerator.GetScriptableObject(itemToAdd);
-        tileSelected.FillTile(itemToAddScriptable, addClassComponent);
-    }
-
 
     /**Fills multiple tiles in the grid with the same item. 
      * 
@@ -171,21 +160,16 @@ public class GameGrid {
      *      activeCoordinates: the tiles in this mxn tile that are responsive.
      *      itemToAdd: must inherit from a Moveables scriptable.
      */
-    public void FillTileInGrid(Vector2 proposedLocation, Vector2 tileSize, Vector2[] activeCoordinates, string itemToAdd, bool scaleBySize = false, bool addClassComponent = false)
+    public void FillTileInGrid(Vector2 proposedLocation, Vector2 tileSize, string prefabSource)
     {
-        if (!CanPlaceTile(proposedLocation, tileSize)) {
+        if (!CanPlaceTile(proposedLocation, tileSize))
+        {
             return;
         } // Make sure tile can be placed.
 
-        AssignActiveTiles(activeCoordinates, itemToAdd); // Assign the active tiles. 
-
-        FillTileInGrid(proposedLocation, itemToAdd, addClassComponent); // Fill the sprite tile; don't assign it active.
-
-        GameTile spriteTile = GetTileFromGrid(proposedLocation);
-        if(scaleBySize) spriteTile.objectHolding.transform.localScale = new Vector2(tileSize.x * CellSize, tileSize.y * CellSize);
-
-        Vector2 currentTilePosition = spriteTile.objectHolding.transform.localPosition;
-        spriteTile.objectHolding.transform.localPosition = GetLargeTilePosition(currentTilePosition, tileSize); // Set position
+        GameTile tileSelected = GetTileFromGrid(proposedLocation);
+        if (tileSelected == null) return; // Tile wasn't in the grid.
+        tileSelected.FillTileWithStation(prefabSource);
     }
 
     /**Assigns each tile with a coordinate in activeCoordinates the Class itemToAdd. */
@@ -220,20 +204,6 @@ public class GameGrid {
         if (proposedLocation.y - tileSize.y  + 1< 0 || proposedLocation.y >= Height) result = false;
         if (!result) Debug.Log("Tile of raw size " + tileSize.x + " by " + tileSize.y + " cannot fit at " + proposedLocation); 
         return result;
-    }
-
-    /**Gets the correct position for a tile larger than 1x1. 
-     * Precondition: tileSize is the raw positions for a grid: (2,2) means it takes up FOUR GameTiles 
-     * Precondition: proposedLocation is the raw location in a grid: (2,2) it is placed at (2,2). 
-     */
-    private Vector2 GetLargeTilePosition(Vector2 proposedLocation, Vector2 tileSize)
-    {
-        float floatErrorOffset;
-        if (tileSize.x == 3) floatErrorOffset = .123f;
-        else floatErrorOffset = 0f;
-
-        Vector2 scaledTileSize = new Vector2(tileSize.x * CellSize, tileSize.y * CellSize);
-        return new Vector2(proposedLocation.x + floatErrorOffset + (scaledTileSize.x - 2)/CellSize, proposedLocation.y - (scaledTileSize.y -2)/CellSize);
     }
 
 

@@ -4,53 +4,18 @@ using UnityEngine;
 
 public class PlateStation : Station
 {
+    public override string NAME { get; } = "PlateStation";
+
     public override string[] ItemsCanTake { get; } = {
-        "GroundBeef",
-        "MarinatedCarnitas",
-        "SlicedStrawberry",
-        "BananaChunks" };
+        "All" };
 
-    public override float TimeToProcess { get; } = 0f;
+    public override float TimeToProcess { get; } = 1.0f;
 
-    public override void CashItemIn(GameObject item, int reward)
+    /**Set up ONE holder.*/
+    public override void SetUpHolders()
     {
-        throw new System.NotImplementedException();
-    }
+        Holders = new StationHolder[2];
+        Holders[0] = transform.GetChild(0).GetComponent<StationHolder>();
 
-    public override void DestroyItem(GameObject item)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void GiveItem(GameObject item)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void MoveItem(GameObject item)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void ProcessItem(GameObject itemToProcess, string itemName)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void TakeItem(GameObject item)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

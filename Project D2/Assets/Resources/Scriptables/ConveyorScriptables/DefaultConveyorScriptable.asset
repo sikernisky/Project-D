@@ -16,5 +16,13 @@ MonoBehaviour:
   draggableSprite: {fileID: 0}
   slotBackground: {fileID: 0}
   greyDraggableSprite: {fileID: 0}
-  placeSound: {fileID: 0}
   basePlacedSprite: {fileID: 2547030297544555729, guid: fa2fd3b49ecc45c428ea78325233628c, type: 3}
+  placeSound: {fileID: 0}
+  conveyorAnimator: {fileID: 0}
+  conveyorMovementAnimationTrack:
+  - {fileID: 2547030297544555729, guid: fa2fd3b49ecc45c428ea78325233628c, type: 3}
+  - {fileID: 7300624774244022254, guid: fa2fd3b49ecc45c428ea78325233628c, type: 3}
+  - {fileID: -4593768997188893728, guid: fa2fd3b49ecc45c428ea78325233628c, type: 3}
+  - {fileID: -6241674269735061538, guid: fa2fd3b49ecc45c428ea78325233628c, type: 3}
+  - {fileID: 3495784663529541488, guid: fa2fd3b49ecc45c428ea78325233628c, type: 3}
+  - {fileID: -8192699444865141171, guid: fa2fd3b49ecc45c428ea78325233628c, type: 3}

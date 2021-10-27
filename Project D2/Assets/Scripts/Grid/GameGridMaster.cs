@@ -56,21 +56,6 @@ public class GameGridMaster : MonoBehaviour
         return grid;
     }
 
-    private GameGrid CreateListenerTilemap(int width, int height)
-    {
-        GameObject ListenerTilemap = new GameObject("ListenerTilemapMaster");
-        GameGrid grid = new GameGrid(width, height, cellSize, ListenerTilemap.transform, 2);
-        grid.FillAllTiles(null);
-        foreach(GameTile tile in grid.GridArray)
-        {
-            tile.objectHolding.AddComponent<ListenerTile>().tileGameTile = tile;
-            tile.objectHolding.GetComponent<ListenerTile>().SetCoordinates(new Vector2(tile.WorldX, tile.WorldY));
-            tile.objectHolding.AddComponent<BoxCollider2D>().size = new Vector2(1, 1);
-        }
-        return grid;
-    }
-
-
     private void GenerateLevel(int levelNumber)
     {
 
@@ -91,26 +76,11 @@ public class GameGridMaster : MonoBehaviour
         switch (levelNumber)
         {
             case 1:
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 10), "PlateStation");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 11), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 12), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 13), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 14), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 15), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 16), "DeluxeConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 17), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 18), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 19), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 20), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 21), "DeluxeConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 22), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 23), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 24), "DefaultConveyor");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(24, 26), new Vector2(3, 3), new Vector2[] { }, "ServeStation");
-
-                MoveablesGameGrid.FillTileInGrid(new Vector2(0, 9), new Vector2(10, 10), new Vector2[] { }, "DefaultConveyor", true ,true);
-
-
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 21), new Vector2(1, 1), "Prefabs/StationPrefabs/PlateStationPrefab");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 22), new Vector2(1, 1), "Prefabs/ConveyorPrefabs/DefaultConveyorPrefab");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 23), new Vector2(1, 1), "Prefabs/ConveyorPrefabs/DeluxeConveyorPrefab");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 24), new Vector2(1, 1), "Prefabs/ConveyorPrefabs/DefaultConveyorPrefab");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 25), new Vector2(3, 3), "Prefabs/StationPrefabs/ServeStationPrefab");
 
                 break;
             default:
@@ -123,6 +93,5 @@ public class GameGridMaster : MonoBehaviour
         BaseGameGrid = CreateGroundTilemap(width, height);
         MoveablesGameGrid = CreateMoveablesTilemap(width, height);
         PlaceablesGameGrid = CreatePlaceablesTilemap(width, height);
-        ListenerGameGrid = CreateListenerTilemap(width, height);
     }
 }

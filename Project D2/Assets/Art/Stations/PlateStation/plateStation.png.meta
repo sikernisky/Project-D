@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: a65d0e2ac8e1e66479a558bec8f6ad95
+guid: 95f3adb537b4f18429c11a0687bd585b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6344971558626128773
-    second: serve_station_0
-  - first:
-      213: 7408301353839137141
-    second: serve_station_1
+      213: -8176059782008204365
+    second: plateStation_0
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -109,7 +106,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: serve_station_0
+      name: plateStation_0
       rect:
         serializedVersion: 2
         x: 0
@@ -123,29 +120,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b7c022a0cf122f7a0800000000000000
-      internalID: -6344971558626128773
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: serve_station_1
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 0
-        width: 48
-        height: 48
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 57190a894d29fc660800000000000000
-      internalID: 7408301353839137141
+      spriteID: 3b31b0762fcc88e80800000000000000
+      internalID: -8176059782008204365
       vertices: []
       indices: 
       edges: []

@@ -80,6 +80,11 @@ public class GameTile
 
     }
 
+    public void FillTileWithStation(string prefabSource)
+    {
+        if (!TileSetUp) AdaptTile(GameObject.Instantiate(Resources.Load(prefabSource) as GameObject));
+    }
+
     /**Removes the GameObject from this tile. */
     public void RemoveTileObject()
     {
@@ -118,5 +123,15 @@ public class GameTile
         tileSpriteRenderer.sortingOrder = GridIn.SortingOrder;
 
         TileSetUp = true;
+    }
+
+    public void AdaptTile(GameObject tileToAdapt)
+    {
+        objectHolding = tileToAdapt;
+
+        Transform tileToAdaptTransform = tileToAdapt.transform;
+        tileToAdaptTransform.localPosition = new Vector2(WorldX, WorldY);
+        tileToAdaptTransform.localScale = new Vector2(GridIn.CellSize + .01f, GridIn.CellSize + .01f);
+        tileToAdaptTransform.SetParent(GridIn.ParentGameObject);
     }
 }

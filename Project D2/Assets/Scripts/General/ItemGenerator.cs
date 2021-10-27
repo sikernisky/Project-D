@@ -8,20 +8,20 @@ public class ItemGenerator
     /**Returns the ItemScriptable with the itemName. If not found, returns a default FoodScriptable. */
     public static ItemScriptable GetScriptableObject(string itemName)
     {
-        if (Resources.Load("FoodScriptables/" + itemName + "Scriptable") != null)
+        if (Resources.Load("Scriptables/FoodScriptables/" + itemName + "Scriptable") != null)
         {
-            return (FoodScriptable)Resources.Load("FoodScriptables/" + itemName + "Scriptable");
+            return (FoodScriptable)Resources.Load("Scriptables/FoodScriptables/" + itemName + "Scriptable");
         }
-        else if (Resources.Load("ConveyorScriptables/" + itemName + "Scriptable") != null)
+        else if (Resources.Load("Scriptables/ConveyorScriptables/" + itemName + "Scriptable") != null)
         {
-            return (ConveyorScriptable)Resources.Load("ConveyorScriptables/" + itemName + "Scriptable");
+            return (ConveyorScriptable)Resources.Load("Scriptables/ConveyorScriptables/" + itemName + "Scriptable");
         }
-        else if (Resources.Load("StationScriptables/" + itemName + "Scriptable") != null)
+        else if (Resources.Load("Scriptables/StationScriptables/" + itemName + "Scriptable") != null)
         {
-            return (StationScriptable)Resources.Load("StationScriptables/" + itemName + "Scriptable");
+            return (StationScriptable)Resources.Load("Scriptables/StationScriptables/" + itemName + "Scriptable");
         }
         Debug.Log("Couldn't find " + itemName);
-        return (FoodScriptable)Resources.Load("FoodScriptables/DefaultFoodScriptable");
+        return (FoodScriptable)Resources.Load("Scriptables/FoodScriptables/DefaultFoodScriptable");
     }
 
     public static Type GetClassFromString(string itemName)
@@ -29,4 +29,6 @@ public class ItemGenerator
         Type classFromString = Type.GetType(itemName);
         return classFromString;
     }
+
+
 }

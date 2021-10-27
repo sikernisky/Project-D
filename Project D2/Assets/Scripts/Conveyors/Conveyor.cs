@@ -11,8 +11,9 @@ public class Conveyor : Item, IMover, IAnimator
     public virtual float MovementAnimationSpeed { get; } = .3f;
 
     /**An array of sprites, in order, that form this Conveyor's movement animation. */
-    public Sprite[] MovementAnimationSpriteTrack { get; protected set; }
+    public Sprite[] MovementAnimationTrack { get; protected set; }
 
+    /**The Coroutine constructed and used when animating this Conveyor. */
     public Coroutine MovementCoroutine { get; protected set; }
 
     /**This conveyor's Sprite Renderer component. */
@@ -45,10 +46,16 @@ public class Conveyor : Item, IMover, IAnimator
 
     }
 
+    /**Cashes an item in.*/
+    public virtual void CashItemIn(GameObject item)
+    {
+
+    }
+
     /**Gathers all animation sprites from Scriptable and stores them in this class.*/
 
     public virtual void SetUpAnimationTracks() {
-        MovementAnimationSpriteTrack = Scriptable.conveyorMovementAnimationTrack;
+        MovementAnimationTrack = Scriptable.conveyorMovementAnimationTrack;
     }
     
     public void Start()
@@ -56,19 +63,22 @@ public class Conveyor : Item, IMover, IAnimator
         ConveyorSpriteRenderer = GetComponent<SpriteRenderer>();
         Scriptable = (ConveyorScriptable)ItemGenerator.GetScriptableObject(NAME);
         SetUpAnimationTracks();
-        PlayAnimation(MovementAnimationSpriteTrack, MovementAnimationSpeed);
+        MovementCoroutine = PlayAnimation(MovementAnimationTrack, MovementAnimationSpeed, ConveyorSpriteRenderer);
     }
 
     /**Plays an animation and stores its Coroutine object.*/
-    public void PlayAnimation(Sprite[] animationTrackToPlay, float secondsBetween)
+    public Coroutine PlayAnimation(Sprite[] animationTrackToPlay, float secondsBetween, SpriteRenderer rendererToAnimate)
     {
-        if(animationTrackToPlay == MovementAnimationSpriteTrack)
+        Coroutine coroToReturn = null;
+
+        if (animationTrackToPlay == MovementAnimationTrack)
         {
-            MovementCoroutine = StartCoroutine(PlayAnimationCoro(animationTrackToPlay, secondsBetween));
+            coroToReturn = StartCoroutine(PlayAnimationCoro(animationTrackToPlay, secondsBetween, rendererToAnimate));
         }
+        return coroToReturn;
     }
 
-    IEnumerator PlayAnimationCoro(Sprite[] animationTrackToPlay, float secondsBetween)
+    IEnumerator PlayAnimationCoro(Sprite[] animationTrackToPlay, float secondsBetween, SpriteRenderer rendererToAnimate)
     {
         while (true)
         {

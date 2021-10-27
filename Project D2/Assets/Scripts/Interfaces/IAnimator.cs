@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IAnimator
 {
-    void PlayAnimation(Sprite[] animationTrackToPlay, float secondsBetween);
+    Coroutine PlayAnimation(Sprite[] animationTrackToPlay, float secondsBetween, SpriteRenderer rendererToAnimate);
 
     void StopAnimation(Coroutine animationToStop);
 
