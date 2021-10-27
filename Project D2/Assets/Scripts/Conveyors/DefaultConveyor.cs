@@ -4,34 +4,5 @@ using UnityEngine;
 
 public class DefaultConveyor : Conveyor
 {
-    public override string NAME { get; } = "Default Conveyor";
-
-
-    public override void DestroyItem(GameObject item)
-    {
-    }
-
-    public override void GiveItem(GameObject item)
-    {
-    }
-
-    public override void MoveItem(GameObject item)
-    {
-    }
-
-    public override void TakeItem(GameObject item)
-    {
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public override string NAME { get; } = "DefaultConveyor";
 }

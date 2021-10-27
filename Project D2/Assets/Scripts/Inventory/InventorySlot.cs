@@ -107,6 +107,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     /**Drags this draggable Image sprite. */
     public void OnDrag(PointerEventData eventData)
     {
+        CameraControl.CanDragCamera = false;
         draggableImage.gameObject.transform.position = Input.mousePosition;
         slotImage.sprite = defaultSlotSprite;
     }
@@ -114,6 +115,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     /**Drops this draggable Image sprite. */
     public void OnDrop(PointerEventData eventData)
     {
+        CameraControl.CanDragCamera = true;
         draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition = ReturnPosition;
         slotImage.sprite = ItemHolding.slotBackground;
 

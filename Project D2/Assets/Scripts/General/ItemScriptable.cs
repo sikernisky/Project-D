@@ -16,6 +16,9 @@ public class ItemScriptable : ScriptableObject
     /**The sprite that represents this Item in the inventory when empty. */
     public Sprite greyDraggableSprite;
 
+    /**The most basic sprite that appears when placed on a tile. */
+    public Sprite basePlacedSprite;
+
 
     public AudioClip placeSound;
 

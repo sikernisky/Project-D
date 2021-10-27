@@ -34,18 +34,24 @@ public class CameraControl : MonoBehaviour
     /**The smallest float myCam.transform.position.y can be.*/
     public float BotBound { get; private set; }
 
+    public static bool CanDragCamera { get; set; }
+
 
 
     private void Start()
     {
+        CanDragCamera = true;
         myCam = GetComponent<Camera>();
         SetCameraBounds();
     }
 
     private void Update()
     {
-        CheckZoom();
-        MoveCamera();
+        if (CanDragCamera)
+        {
+            CheckZoom();
+            MoveCamera();
+        }
     }
 
     private void MoveCamera()

@@ -52,12 +52,32 @@ public class GameTile
         objectHolding = objectToAdd;
     }
 
-    /**Fills this GameTile with an object. */
-    public void FillTile(MoveableScriptable itemToFill)
+    /**Fills this GameTile with an object. 
+       Precondition: itemToFill's itemClassName is a real class.
+         */
+    public void FillTile(ItemScriptable itemToFill, bool addClassComponent = true)
     {
-        Sprite test = itemToFill.basePlacedSprite;
         if (!TileSetUp) CreateRealTile(itemToFill.basePlacedSprite);
-        else tileSpriteRenderer.sprite = itemToFill.basePlacedSprite;
+
+        //If it's a station, it should have a sorting order ABOVE conveyors.
+        var stationCast = itemToFill as StationScriptable;
+        if (stationCast != null) tileSpriteRenderer.sortingOrder++;
+   
+        tileSpriteRenderer.sprite = itemToFill.basePlacedSprite;
+        objectHolding.name = itemToFill.itemClassName;
+
+
+        if(addClassComponent)
+        {
+            Type itemToFillClass = ItemGenerator.GetClassFromString(itemToFill.itemClassName);
+            if (itemToFillClass == null)
+            {
+                itemToFillClass = Type.GetType("DefaultConveyor");
+                Debug.Log("Class not found from MoveableScriptable.itemClassName; Default Conveyor added as a fallback.");
+            }
+            if (objectHolding.GetComponent(itemToFillClass) == null) objectHolding.AddComponent(itemToFillClass);
+        }
+
     }
 
     /**Removes the GameObject from this tile. */

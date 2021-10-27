@@ -77,8 +77,8 @@ public class GameGridMaster : MonoBehaviour
         switch (levelNumber)
         {
             case 1:
-                GridWidth = 50;
-                GridHeight = 50;
+                GridWidth = 40;
+                GridHeight = 40;
                 break;
             default:
                 GridWidth = 20;
@@ -91,7 +91,27 @@ public class GameGridMaster : MonoBehaviour
         switch (levelNumber)
         {
             case 1:
-                MoveablesGameGrid.FillTileInGrid(new Vector2(0, 0), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 10), "PlateStation");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 11), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 12), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 13), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 14), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 15), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 16), "DeluxeConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 17), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 18), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 19), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 20), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 21), "DeluxeConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 22), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 23), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 24), "DefaultConveyor");
+                MoveablesGameGrid.FillTileInGrid(new Vector2(24, 26), new Vector2(3, 3), new Vector2[] { }, "ServeStation");
+
+                MoveablesGameGrid.FillTileInGrid(new Vector2(0, 9), new Vector2(10, 10), new Vector2[] { }, "DefaultConveyor", true ,true);
+
+
+
                 break;
             default:
                 return;

@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Linq;
 
-public class Inventory : MonoBehaviour
+public class Inventory : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     /**A list of all slots in this inventory. Set in Start(). */
     public List<InventorySlot> childSlots { get; private set; }
@@ -68,7 +69,7 @@ public class Inventory : MonoBehaviour
         int counter = 0;
         foreach (KeyValuePair<string,int> item in itemsToAssign)
         {
-            ItemScriptable currentScriptable = FoodGenerator.GetScriptableObject(item.Key);
+            ItemScriptable currentScriptable = ItemGenerator.GetScriptableObject(item.Key);
             if(counter < childSlots.Count) childSlots[counter].FillSlot(currentScriptable, item.Value); // fill the slot
             OrderedInventoryItems.AddLast(currentScriptable);
             OrderedItemRemaining.Add(item.Value);
@@ -138,4 +139,13 @@ public class Inventory : MonoBehaviour
         return OrderedItemRemaining[i];
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        CameraControl.CanDragCamera = false;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        CameraControl.CanDragCamera = true;
+    }
 }

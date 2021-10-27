@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodGenerator
+public class ItemGenerator
 {
     /**Returns the ItemScriptable with the itemName. If not found, returns a default FoodScriptable. */
     public static ItemScriptable GetScriptableObject(string itemName)
@@ -16,6 +16,11 @@ public class FoodGenerator
         {
             return (ConveyorScriptable)Resources.Load("ConveyorScriptables/" + itemName + "Scriptable");
         }
+        else if (Resources.Load("StationScriptables/" + itemName + "Scriptable") != null)
+        {
+            return (StationScriptable)Resources.Load("StationScriptables/" + itemName + "Scriptable");
+        }
+        Debug.Log("Couldn't find " + itemName);
         return (FoodScriptable)Resources.Load("FoodScriptables/DefaultFoodScriptable");
     }
 

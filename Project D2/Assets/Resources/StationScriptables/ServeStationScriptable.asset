@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ca55c1df038e2438bf2ad5b210f9f7, type: 3}
+  m_Name: ServeStationScriptable
+  m_EditorClassIdentifier: 
+  itemClassName: ServeStation
+  draggableSprite: {fileID: 0}
+  slotBackground: {fileID: 0}
+  greyDraggableSprite: {fileID: 0}
+  placeSound: {fileID: 0}
+  basePlacedSprite: {fileID: 3465897480737058805, guid: eec50328dc7e29a4fa83a14b2b137911, type: 3}
+  stationAnimator: {fileID: 0}
