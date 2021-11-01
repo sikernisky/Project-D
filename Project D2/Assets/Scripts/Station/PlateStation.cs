@@ -6,6 +6,10 @@ public class PlateStation : Station
 {
     public override string NAME { get; } = "PlateStation";
 
+    public GameObject plateHolding;
+
+    private GameObject emptyPlate;
+
     public override string[] ItemsCanTake { get; } = {
         "All" };
 
@@ -14,8 +18,29 @@ public class PlateStation : Station
     /**Set up ONE holder.*/
     public override void SetUpHolders()
     {
-        Holders = new StationHolder[2];
-        Holders[0] = transform.GetChild(0).GetComponent<StationHolder>();
+
 
     }
+
+    public void SpawnPlate()
+    {
+        GameObject spawnedPlate = Instantiate(Resources.Load("Prefabs/PlatePrefab") as GameObject, transform);
+        spawnedPlate.transform.localPosition = new Vector2(0, .25f);
+        plateHolding = spawnedPlate;
+    }
+
+    
+
+  
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            MoveItem(plateHolding);
+            SpawnPlate();
+        }
+    }
+
+
 }

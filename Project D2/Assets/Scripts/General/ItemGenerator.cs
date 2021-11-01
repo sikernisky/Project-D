@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class ItemGenerator
 {
+    public static string DefaultConveyorPath { get; } = "Prefabs/ConveyorPrefabs/DefaultConveyorPrefab";
+    public static string DeluxeConveyorPath { get; } = "Prefabs/ConveyorPrefabs/DeluxeConveyorPrefab";
+    public static string PlateStationPath { get; } = "Prefabs/StationPrefabs/PlateStationPrefab";
+    public static string ServeStationPath { get; } = "Prefabs/StationPrefabs/ServeStationPrefab";
+
     /**Returns the ItemScriptable with the itemName. If not found, returns a default FoodScriptable. */
     public static ItemScriptable GetScriptableObject(string itemName)
     {

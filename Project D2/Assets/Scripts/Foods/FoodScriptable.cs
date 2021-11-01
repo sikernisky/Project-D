@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Food")]
 public class FoodScriptable: ItemScriptable
 {
-
+    public Sprite plateSprite;
 }

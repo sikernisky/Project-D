@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameGridMaster : MonoBehaviour
 {
+    /**The cell size of created GameGrids. */
     public const float cellSize = 2f;
 
     /**An array of sprites for ground/base tiles. Assigned in the inspector. */
@@ -28,12 +29,19 @@ public class GameGridMaster : MonoBehaviour
     public static int GridHeight;
 
 
+
+
     void Start()
     {
         SaveMaster.saveData.levelToLoad = 1;
         GenerateLevel(SaveMaster.saveData.levelToLoad);
+        
     }
 
+
+    /**Creates a GameGrid with width width and height height.
+     (1) width: the width of this grid.
+     (2) height: the height of this grid. */
     private GameGrid CreateGroundTilemap(int width, int height)
     {
         GameObject GroundTilemapParent = new GameObject("GroundTilemapMaster");
@@ -42,6 +50,9 @@ public class GameGridMaster : MonoBehaviour
         return grid;
     }
 
+    /**Creates a GameGrid with width width and height height.
+     (1) width: the width of this grid.
+     (2) height: the height of this grid. */
     private GameGrid CreateMoveablesTilemap(int width, int height)
     {
         GameObject MoveablesTilemapParent = new GameObject("MoveablesTilemapMaster");
@@ -49,6 +60,9 @@ public class GameGridMaster : MonoBehaviour
         return grid;
     }
 
+    /**Creates a GameGrid with width width and height height.
+     (1) width: the width of this grid.
+     (2) height: the height of this grid. */
     private GameGrid CreatePlaceablesTilemap(int width, int height)
     {
         GameObject PlaceablesTilemap = new GameObject("PlaceablesTilemapMaster");
@@ -56,14 +70,40 @@ public class GameGridMaster : MonoBehaviour
         return grid;
     }
 
+    /**Creates a GameGrid with width width and height height.
+     - Calls CreateRealTile() on each GameTile in this grid.
+     - Adds a ListenerTile component to each tile.
+     - Calls SetCoordinates() on each ListenerTile. 
+     (1) width: the width of this grid.
+     (2) height: the height of this grid. */
+    private GameGrid CreateListenerTilemap(int width, int height)
+    {
+        GameObject ListenerTilemap = new GameObject("ListenerTilemap");
+        GameGrid grid = new GameGrid(width, height, cellSize, ListenerTilemap.transform, 3);
+        foreach(GameTile tile in grid.GridArray)
+        {
+            tile.CreateRealTile(null);
+            tile.objectHolding.AddComponent<ListenerTile>().tileGameTile = tile;
+            tile.objectHolding.GetComponent<ListenerTile>().SetCoordinates();
+        }
+        return grid;
+    }
+
+    /**A massive function used to build levels. Results vary based on levelNumber.
+     (1) levelNumber: the level to load. */
     private void GenerateLevel(int levelNumber)
     {
+        Conveyor.Direction north = Conveyor.Direction.North;
+        Conveyor.Direction east = Conveyor.Direction.East;
+        Conveyor.Direction south = Conveyor.Direction.South;
+        Conveyor.Direction west = Conveyor.Direction.West;
+
 
         switch (levelNumber)
         {
             case 1:
-                GridWidth = 40;
-                GridHeight = 40;
+                GridWidth = 30;
+                GridHeight = 30;
                 break;
             default:
                 GridWidth = 20;
@@ -76,22 +116,39 @@ public class GameGridMaster : MonoBehaviour
         switch (levelNumber)
         {
             case 1:
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 21), new Vector2(1, 1), "Prefabs/StationPrefabs/PlateStationPrefab");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 22), new Vector2(1, 1), "Prefabs/ConveyorPrefabs/DefaultConveyorPrefab");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 23), new Vector2(1, 1), "Prefabs/ConveyorPrefabs/DeluxeConveyorPrefab");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 24), new Vector2(1, 1), "Prefabs/ConveyorPrefabs/DefaultConveyorPrefab");
-                MoveablesGameGrid.FillTileInGrid(new Vector2(25, 25), new Vector2(3, 3), "Prefabs/StationPrefabs/ServeStationPrefab");
+                //Fill a tile at (13,15) with size (3,3) and set its next tile to (14,20)
+                MoveablesGameGrid.FillTile(13,19,3,2,ItemGenerator.PlateStationPath, "PlateStation", north, 14, 20);
+                MoveablesGameGrid.FillTile(14,20, 1,1, ItemGenerator.DeluxeConveyorPath,"DeluxeConveyor", west);
+                MoveablesGameGrid.FillTile(13,20,1,1, ItemGenerator.DefaultConveyorPath,"DefaultConveyor", west);
+                MoveablesGameGrid.FillTile(12, 20, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", west);
+                MoveablesGameGrid.FillTile(11, 20, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTile(11, 21, 1, 1, ItemGenerator.DefaultConveyorPath, "DeluxeConveyor", north);
+                MoveablesGameGrid.FillTile(11, 22, 1, 1, ItemGenerator.DefaultConveyorPath, "DeluxeConveyor", north);
+                MoveablesGameGrid.FillTile(11, 23, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTile(11, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", east);
+                MoveablesGameGrid.FillTile(12, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", east);
+                MoveablesGameGrid.FillTile(13, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", east);
+                MoveablesGameGrid.FillTile(14, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DeluxeConveyor", north);
+                MoveablesGameGrid.FillTile(14,24, 1,1, ItemGenerator.DefaultConveyorPath,"DefaultConveyor", north);
+                MoveablesGameGrid.FillTile(14,25,1,1,ItemGenerator.DefaultConveyorPath,"DefaultConveyor", north, 13, 26);
+    
+                MoveablesGameGrid.FillTile(13,26, 3,2, ItemGenerator.ServeStationPath,"ServeStation", north);
 
                 break;
             default:
                 return;
         }
+
     }
 
+    /**Generates the GameGrids for static fields BaseGameGrid, MoveablesGameGrid, PlaceablesGameGrid, and ListenerGameGrid.
+     (1) width: the width of each GameGrid.
+     (2) height: the height of each GameGrid. */
     private void SpawnAllGrids(int width, int height)
     {
         BaseGameGrid = CreateGroundTilemap(width, height);
         MoveablesGameGrid = CreateMoveablesTilemap(width, height);
         PlaceablesGameGrid = CreatePlaceablesTilemap(width, height);
+        ListenerGameGrid = CreateListenerTilemap(width, height);
     }
 }

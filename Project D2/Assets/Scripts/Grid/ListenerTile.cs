@@ -10,9 +10,9 @@ public class ListenerTile : MonoBehaviour
     /**The GameTile this ListerTile corresponds to. */
     public GameTile tileGameTile { get; set; }
 
-    public void SetCoordinates(Vector2 proposedCoordinates)
+    public void SetCoordinates()
     {
-        Coordinates = proposedCoordinates;
+        Coordinates = new Vector2(tileGameTile.X, tileGameTile.Y);
     }
 
     /**Returns a string representation of this tile. */
@@ -22,13 +22,18 @@ public class ListenerTile : MonoBehaviour
         return tileGameTile.ToString();
     }
 
+    private void Start()
+    {
+        gameObject.AddComponent<BoxCollider2D>().size = new Vector2(1,1);
+    }
 
     public void OnMouseDown()
     {
-        //int clickedTilePosX = gameObject.GetComponent<ListenerTile>().tileGameTile.X;
-        //int clickedTilePosY = gameObject.GetComponent<ListenerTile>().tileGameTile.Y;
 
-        //GameTile clickedTile = GameGridMaster.BaseGameGrid.GetTileFromGrid(new Vector2(clickedTilePosX, clickedTilePosY));
-        //clickedTile.tileSpriteRenderer.color = new Color32(255, 0, 0, 255);
+        GameTile clickedTile = GameGridMaster.MoveablesGameGrid.GetTileFromGrid(Coordinates);
+        if (clickedTile.Occupied) Debug.Log(clickedTile.GameTileName);
+        else Debug.Log("Not occupied.");
+
+        //Debug.Log(tileGameTile.X + ", " + tileGameTile.Y);
     }
 }

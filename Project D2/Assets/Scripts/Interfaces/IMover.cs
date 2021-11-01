@@ -8,7 +8,7 @@ public interface IMover
 
     void MoveItem(GameObject item);
 
-    void GiveItem(GameObject item);
+    void GiveItem(GameObject item, Item target);
 
     void DestroyItem(GameObject item);
 

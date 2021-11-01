@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Station : Item, IMover, IAnimator
+public class Station : Item, IAnimator
 {
 
     /**Name of this Station. Corresponds to its Class name. */
@@ -25,26 +25,18 @@ public class Station : Item, IMover, IAnimator
     /** The amount of time, in seconds, it takes to hold an item. */
     public virtual float TimeToProcess { get; }
 
+    /**The number of times a GameObject on this Station moves closer to its target.*/
+    public const int NUM_MOVEMENT_TICKS = 6;
 
-    public void Start()
+
+    protected virtual void Start()
     {
         Scriptable = (StationScriptable)ItemGenerator.GetScriptableObject(NAME);
         SetUpAnimationTracks();
         SetUpHolders();
 
-        foreach(StationHolder holder in Holders)
-        {
-            holder.HolderAnimation = PlayAnimation(HolderAnimationTrack, .2f, holder.HolderSpriteRenderer);
-        }
-
     }
 
-    /** Places its first item in the most available Holder, holds it, then passes it to the 
-     *  next appropriate GameTile.*/
-    public virtual void ProcessItem(GameObject itemToProcess, string itemName)
-    {
-
-    }
 
     /** Returns true of this Station can process the item. */
     public bool CanProcess(string itemName)
@@ -59,31 +51,66 @@ public class Station : Item, IMover, IAnimator
     }
 
     /**DEFINE ME.*/
-    public virtual void TakeItem(GameObject item)
+    public override void TakeItem(GameObject item)
     {
+        item.transform.SetParent(transform);
+        item.transform.localPosition = new Vector2(0, 0);
 
+        HoldItem(item);
     }
+
+    public virtual void HoldItem(GameObject item)
+    {
+        ProcessItem(item);
+    }
+
+    /** Places its first item in the most available Holder, holds it, then passes it to the 
+ *  next appropriate GameTile.*/
+    public virtual void ProcessItem(GameObject item)
+    {
+        MoveItem(item);
+    }
+
 
     /**Moves this item from a Holder to the next appropriate GameTile.*/
-    public virtual void MoveItem(GameObject item)
+    public override void MoveItem(GameObject item)
     {
-
+        StartCoroutine(MoveItemCoro(item));
     }
 
-    /**Gives an Item it holds to another IMover.*/
-    public virtual void GiveItem(GameObject item)
+    IEnumerator MoveItemCoro(GameObject item)
     {
+        yield return new WaitForSeconds(TimeToProcess);
 
+        if(GameTileIn.NextGameTile.objectHolding == null)
+        {
+            DestroyItem(item);
+            yield break;
+        }
+
+        Vector3 targetDestination = GameTileIn.NextGameTile.objectHolding.transform.position;
+        Vector3 distanceToTravel = targetDestination - item.transform.position;
+        Vector3 distancePerTick = distanceToTravel / NUM_MOVEMENT_TICKS;
+        float secondsBetweenTick = .5f / NUM_MOVEMENT_TICKS;
+
+        for (int i = 0; i < NUM_MOVEMENT_TICKS; i++)
+        {
+            item.transform.position += distancePerTick;
+            yield return new WaitForSeconds(secondsBetweenTick);
+        }
+
+        if (GameTileIn.NextGameTile.objectHolding == null) DestroyItem(item);
+        else GiveItem(item, GameTileIn.NextGameTile.objectHolding.GetComponent<Item>());
     }
 
     /**Destroys an item held in one of this Station's Holders.*/
-    public virtual void DestroyItem(GameObject item)
+    public override void DestroyItem(GameObject item)
     {
-
+        Destroy(item);
     }
 
     /**Cashes an item in.*/
-    public virtual void CashItemIn(GameObject item)
+    public override void CashItemIn(GameObject item)
     {
 
     }

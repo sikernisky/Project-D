@@ -124,6 +124,13 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     }
 
 
+    /**Returns true if this slot's Food can be dragged. False otherwise. */
+    private bool CanDrag()
+    {
+        return true;
+    }
+
+
 
 
 }

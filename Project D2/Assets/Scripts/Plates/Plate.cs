@@ -4,34 +4,61 @@ using UnityEngine;
 
 public class Plate : MonoBehaviour
 {
-    public List<Food> foodsOnPlate { get; }
+    public List<PlateSlot> Slots { get; private set; }
 
-    public void AddFoodToPlate(string foodToAdd)
+    public SpriteRenderer PlateSpriteRenderer { get; private set; }
+
+
+    private void Start()
     {
-        gameObject.AddComponent(ItemGenerator.GetClassFromString(foodToAdd));
+
+        PlateSpriteRenderer = GetComponent<SpriteRenderer>();
+        GatherPlateSlots();
+
     }
 
-    private void Update()
+    /**Adds a Food to this plate. Precondition: foodToAdd must correspond to a Food class. */
+    public void AddFoodToPlate(FoodScriptable foodToAdd)
     {
-        performAbilities();
+        if (GetNextOpenSlot() == null) return; Debug.Log("No available slots on this plate.");
+        gameObject.AddComponent(ItemGenerator.GetClassFromString(foodToAdd.itemClassName));
+        GetNextOpenSlot().AddFoodSpriteToSlot(foodToAdd.plateSprite, foodToAdd.itemClassName);
+        
     }
 
-    private void performAbilities()
+    private PlateSlot GetNextOpenSlot()
     {
-        foreach(Food food in foodsOnPlate)
+        foreach(PlateSlot plateSlot in Slots)
         {
-            food.PerformAbility(this);
+            if (plateSlot.IsOpen()) return plateSlot;
+        }
+        return null;
+    }
+
+
+    private void GatherPlateSlots()
+    {
+        Slots = new List<PlateSlot>();
+
+        int counter = 0;
+        foreach(Transform child in transform)
+        {
+            if(child.GetComponent<PlateSlot>() != null)
+            {
+                PlateSlot childSlotComponent = child.GetComponent<PlateSlot>();
+                childSlotComponent.SlotNumber = counter;
+                Slots.Add(childSlotComponent);
+                counter++;
+            }
         }
     }
+    
+
+    
 
     public override string ToString()
     {
-        string output = "";
-        foreach(Food food in foodsOnPlate)
-        {
-            output += food.NAME + ", ";
-        }
-        return output;
+        return null;
     }
 
 

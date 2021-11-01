@@ -10,6 +10,7 @@ public class GameGrid {
     //The GridArray holds a 2D array of GameTile objects.
     //They aren't gameobjects quite yet. To bring it to life, we create a gameobject at its coords.
 
+    
 
     /**The width of this Grid (x-axis). */
     public int Width { get; private set; }
@@ -30,11 +31,11 @@ public class GameGrid {
     public Transform ParentGameObject { get; set; }
 
     /**Creates an object of type GameGrid.
-     * height: number of tiles on the y-axis. > 0
-     * width: number of tiles on the x-axis. > 0
-     * cellSize: the x by y size of each tile. > 0
-     * tileImages: an array of Sprites, can be null
-     * parent: the parent of all the tiles, not null
+     (1) height: number of tiles on the y-axis. > 0
+     (2) width: number of tiles on the x-axis. > 0
+     (3) cellSize: the x by y size of each tile. > 0
+     (4) tileImages: an array of Sprites, can be null
+     (5) parent: the parent of all the tiles, not null
      */
     public GameGrid(int width, int height, float cellSize, Transform parent, int sortingOrder = 0)
     {
@@ -63,6 +64,8 @@ public class GameGrid {
 
     }
 
+    /**Fills each GameTile's SpriteRenderer in GridArray with a random sprite in imagesToFillWith. 
+     (1) imagesToFillWith: an array of sprites used to paint the grid.*/
     public void FillAllTiles(Sprite[] imagesToFillWith)
     {
         foreach (GameTile tile in GridArray)
@@ -72,8 +75,10 @@ public class GameGrid {
         }
     }
 
-    /**Returns a Vector3 that describes the position of a tile based on its 
-     * x pos, y pos, and cellsize. */
+    /**Returns a Vector3 that describes the position of a tile based on its x pos, y pos, and cellsize. 
+     (1) x: the x position of the tile 
+     (2) y: the y position of the tile */
+
     private Vector3 GetWorldPosition(int x, int y)
     {
         return new Vector3(x, y) * CellSize;
@@ -87,26 +92,28 @@ public class GameGrid {
         return new Vector3(xPos, yPos, -10);
     }
 
-    /**Returns a random Sprite in TileImages. */
+    /**Returns a random Sprite in TileImages.
+     (1) sprites: an array of sprites used in random selection.*/
+
     private Sprite GetRandomTileSprite(Sprite[] sprites)
     {
         if (sprites == null) return null;
         return sprites[Random.Range(0, sprites.Length - 1)];
     }
 
-    /**Gets a GameTile from this GridArray by its coordinates. Returns null if not in the array.*/
+    /**Gets a GameTile from this GridArray by its coordinates. Returns null if not in the array.
+     (1) coordinates: the grid coordinates of the desired tile. */
     public GameTile GetTileFromGrid(Vector2 coordinates)
     {
         foreach (GameTile tile in GridArray)
         {
             if (coordinates.x == tile.X && coordinates.y == tile.Y) return tile;
         }
-        Debug.Log("Tile is not in grid.");
-        return null;
+        return null; // Tile is not in grid.
     }
 
 
-    /**Fills multiple tiles in the grid with the same item. 
+    /**Fills one or more tiles in the grid with an Item. 
      * 
      * Example: Suppose a grid below has [ ] empty and [x] filled.
      * 
@@ -120,7 +127,7 @@ public class GameGrid {
      *6 [ ]  [ ]  [ ]  [ ]  [ ]  [x]  [ ]  [ ]
      *7 [ ]  [ ]  [ ]  [ ]  [ ]  [x]  [ ]  [ ]
      * 
-     * Then, placing a 4x4 item y at (4,2) updates the grid from top left to bottom right:
+     * Then, placing a 4x4 item [y] at (4,2) updates the grid from top left to bottom right:
      * 
      *   0    1    2    3    4    5    6    7
      *0 [x]  [ ]  [ ]  [ ]  [ ]  [ ]  [ ]  [ ]
@@ -132,74 +139,63 @@ public class GameGrid {
      *6 [ ]  [ ]  [ ]  [ ]  [ ]  [x]  [ ]  [ ]
      *7 [ ]  [ ]  [ ]  [ ]  [ ]  [x]  [ ]  [ ]
      * 
-     * Only the tile at (4,2) actually has its SpriteRenderer set. We increase its size.
-     * --> For each expansion, increase its x position by 1 and decrease its y position by 1.
-     *  --> Here, we are implementing a 4x4 tile. Increase x pos by 4 and decrease y pos by 4.
-     *  --> Multiply x scale by 4 and y scale by 4.
+     * Only the tile at (4,2) actually has its SpriteRenderer set. We adjust its transform.position accordingly.
      * 
-     * Parameter activeCoordinates indicates which tiles in the area should be responsive. 
-     * Suppose activeCoordinates = [(5,5) , (6,5)].
-     * 
-     * Under the hood, our grid has [x] occupied, [y] occupied and not interactable, [Y] interactable with added item.
-     * 
-     *   0    1    2    3    4    5    6    7
-     *0 [x]  [ ]  [ ]  [ ]  [ ]  [ ]  [ ]  [ ]
-     *1 [ ]  [ ]  [ ]  [x]  [ ]  [ ]  [ ]  [ ]
-     *2 [ ]  [ ]  [ ]  [ ]  [y]  [y]  [y]  [y]
-     *3 [ ]  [ ]  [ ]  [ ]  [y]  [y]  [y]  [y]
-     *4 [ ]  [ ]  [x]  [ ]  [y]  [y]  [y]  [y]
-     *5 [ ]  [x]  [ ]  [ ]  [y]  [Y]  [Y]  [y]
-     *6 [ ]  [ ]  [ ]  [ ]  [ ]  [x]  [ ]  [ ]
-     *7 [ ]  [ ]  [ ]  [ ]  [ ]  [x]  [ ]  [ ]     
-     * 
-     * 
-     * Preconditions:
-     * 
-     *      coordinates: a Vector2 with a tile that exists in this grid.
-     *      size: the size of this mxn tile. must be within the grid.
-     *      activeCoordinates: the tiles in this mxn tile that are responsive.
-     *      itemToAdd: must inherit from a Moveables scriptable.
+     * Precondition: prefabSource: links to a valid prefab.
+  
      */
-    public void FillTileInGrid(Vector2 proposedLocation, Vector2 tileSize, string prefabSource)
+    public void FillTile(int xPos, int yPos, int xSize, int ySize, string prefabSource, string name, Conveyor.Direction direction, int nextXPos = -1, int nextYPos = -1)
     {
-        if (!CanPlaceTile(proposedLocation, tileSize))
+        Vector2 nextTilePos;
+
+        if(nextXPos == -1 && nextYPos == -1)
         {
-            return;
-        } // Make sure tile can be placed.
+            if (direction == Conveyor.Direction.North) nextTilePos = new Vector2(xPos, yPos + 1);
+            else if (direction == Conveyor.Direction.East) nextTilePos = new Vector2(xPos + 1, yPos);
+            else if (direction == Conveyor.Direction.South) nextTilePos = new Vector2(xPos, yPos - 1);
+            else nextTilePos = new Vector2(xPos - 1, yPos);
+        }
+        else nextTilePos = new Vector2(nextXPos, nextYPos);
+
+        Vector2 proposedLocation = new Vector2(xPos, yPos);
+        Vector2 tileSize = new Vector2(xSize, ySize);
+
+        if (!CanPlaceTile(proposedLocation, tileSize)) return; // Do nothing if the tile is placed at an invalid spot.
 
         GameTile tileSelected = GetTileFromGrid(proposedLocation);
-        if (tileSelected == null) return; // Tile wasn't in the grid.
-        tileSelected.FillTileWithStation(prefabSource);
+        if (tileSelected == null) return;
+        tileSelected.FillTile(prefabSource, GetTileFromGrid(nextTilePos), name, tileSize, direction);
+
+
+        AssignActiveTiles(proposedLocation, tileSize, name);
     }
 
-    /**Assigns each tile with a coordinate in activeCoordinates the Class itemToAdd. */
-    private void AssignActiveTiles(Vector2[] activeCoordinates, string itemToAdd)
+    /**For each GameTile within a size.x by size.y tile placed at location, calls OccupyTile(name).
+     * See the specification for FillTile() for more information on large tile placement.*/
+    public void AssignActiveTiles(Vector2 location, Vector2 size, string name)
     {
-        foreach (Vector2 coordinate in activeCoordinates)
+
+        int x = (int) size.x;
+        int y = (int) size.y;
+
+        for (int i = (int)location.x; i < location.x + x; i++)
         {
-            GameTile coordinateTile = GetTileFromGrid(coordinate);
-            if (coordinateTile == null)
+            for(int z = (int)location.y; z > location.y - y; z--)
             {
-                Debug.Log("The coordinate of which you are trying to set active is not in the Grid.");
-                return;
+                GameTile tileSelected = GetTileFromGrid(new Vector2(i, z));
+                tileSelected.OccupyTile(name);
             }
         }
 
-        foreach (Vector2 coordinate in activeCoordinates)
-        {
-            GameTile coordinateTile = GetTileFromGrid(coordinate);
-            coordinateTile.objectHolding.AddComponent(ItemGenerator.GetClassFromString(itemToAdd));
-        }
+
 
     }
 
-    /**Returns True if this tile can be placed at proposedLocation; false otherwise 
-         * Precondition: tileSize is the raw positions for a grid: (2,2) means it takes up FOUR GameTiles 
-         * Precondition: proposedLocation is the raw location in a grid: (2,2) it is placed at (2,2). 
-         */
+    /**Returns True if this tile can be placed at proposedLocation; false otherwise. */
     private bool CanPlaceTile(Vector2 proposedLocation, Vector2 tileSize)
     {
         bool result = true;
+        if (tileSize.x < 1 || tileSize.y < 1) result = false;
         if (proposedLocation.x + tileSize.x - 1 >= Width || proposedLocation.x < 0) result = false;
         if (proposedLocation.y - tileSize.y  + 1< 0 || proposedLocation.y >= Height) result = false;
         if (!result) Debug.Log("Tile of raw size " + tileSize.x + " by " + tileSize.y + " cannot fit at " + proposedLocation); 

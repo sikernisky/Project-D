@@ -16,6 +16,15 @@ MonoBehaviour:
   draggableSprite: {fileID: 0}
   slotBackground: {fileID: 0}
   greyDraggableSprite: {fileID: 0}
-  basePlacedSprite: {fileID: -6344971558626128773, guid: a65d0e2ac8e1e66479a558bec8f6ad95, type: 3}
+  basePlacedSprite: {fileID: 1101513336177976955, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
   placeSound: {fileID: 0}
   stationAnimator: {fileID: 0}
+  holderReadyAnimationTrack:
+  - {fileID: 1101513336177976955, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: 554173592516527194, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: 5890664973158925437, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: -6783115117288085911, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: -3912322084797042891, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: -4636559462193146929, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  holderFilledSprite: {fileID: 0}
+  mainButtonSprite: {fileID: 0}

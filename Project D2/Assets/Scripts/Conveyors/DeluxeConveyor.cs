@@ -7,4 +7,6 @@ public class DeluxeConveyor : Conveyor
     public override string NAME { get; } = "DeluxeConveyor";
 
     public override float MovementAnimationSpeed { get; } = .1f;
+
+    public override float ConveyorSpeed { get; } = .25f;
 }

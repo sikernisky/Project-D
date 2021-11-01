@@ -23,5 +23,4 @@ public class Broccoli : Food
     {
         Debug.Log("Performing Broccoli's ability: printing the name of the plate it was passed: " + plate.ToString());
     }
-
 }

@@ -16,4 +16,6 @@ MonoBehaviour:
   draggableSprite: {fileID: -6941975027551946901, guid: 8e12f209d6904e3438055751952a28a1, type: 3}
   slotBackground: {fileID: 6192857904779209107, guid: 8e12f209d6904e3438055751952a28a1, type: 3}
   greyDraggableSprite: {fileID: -924014382937237087, guid: 8e12f209d6904e3438055751952a28a1, type: 3}
+  basePlacedSprite: {fileID: 0}
   placeSound: {fileID: 0}
+  plateSprite: {fileID: 599915304803301777, guid: 871d8fbd0725bd248996a38d6d087532, type: 3}

@@ -16,9 +16,33 @@ public class StationHolder : MonoBehaviour
 
     public GameObject HolderGameObject;
 
-    public void HoldItem(float secondsToHold)
-    {
+    public bool HoldingObject { get; private set; }
 
+    public Vector2 HolderPosition { get; private set; }
+
+    public GameObject ItemHolding { get; private set; }
+
+    public StationHolder HoldItem(GameObject itemToHold)
+    {
+        if (!HoldingObject)
+        {
+            ItemHolding = itemToHold;
+            HoldingObject = true;
+            itemToHold.transform.localPosition = transform.localPosition;
+            return this;
+        }
+        return null;
+    }
+
+    public void ReleaseItem()
+    {
+        ItemHolding = null;
+        HoldingObject = false;
+    }
+
+    private void Start()
+    {
+        HolderPosition = transform.localPosition;
     }
 
 
