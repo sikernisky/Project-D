@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 859fc7a9ab8723b4e84ab671dc599102, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -98,6 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfe437c70b8200e45b3e4d58cba92497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftHolder: {fileID: 3481801657374328691}
+  rightHolder: {fileID: 4616607468737209470}
 --- !u!1 &3208794253144317744
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,6 +111,7 @@ GameObject:
   - component: {fileID: 533658580666754638}
   - component: {fileID: 6718629180069526658}
   - component: {fileID: 3481801657374328691}
+  - component: {fileID: 8642130555598898091}
   m_Layer: 0
   m_Name: LeftHolder
   m_TagString: Untagged
@@ -124,7 +127,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3208794253144317744}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0.252, z: 0}
+  m_LocalPosition: {x: -0.5, y: 0.252, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6094615757362905283}
@@ -170,7 +173,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 5
   m_Sprite: {fileID: 1101513336177976955, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -194,11 +197,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb45804c5d2fc2242a6e4d644bd1a3e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCanDragInto: 0
-  HolderNumber: 0
   ParentStation: {fileID: 4585349524464835928}
   HolderSpriteRenderer: {fileID: 6718629180069526658}
   HolderGameObject: {fileID: 3208794253144317744}
+--- !u!61 &8642130555598898091
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3208794253144317744}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0015699863, y: -0.000000059604645}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.25, y: 1}
+    newSize: {x: 2, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.1275408, y: 0.8806807}
+  m_EdgeRadius: 0
 --- !u!1 &5668671609615931044
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +237,7 @@ GameObject:
   - component: {fileID: 7405152256038729193}
   - component: {fileID: 874054315817067424}
   - component: {fileID: 4616607468737209470}
+  - component: {fileID: 1842796358508840153}
   m_Layer: 0
   m_Name: RightHolder
   m_TagString: Untagged
@@ -271,7 +299,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 5
   m_Sprite: {fileID: 1101513336177976955, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -295,8 +323,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb45804c5d2fc2242a6e4d644bd1a3e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCanDragInto: 0
-  HolderNumber: 1
   ParentStation: {fileID: 4585349524464835928}
   HolderSpriteRenderer: {fileID: 874054315817067424}
   HolderGameObject: {fileID: 5668671609615931044}
+--- !u!61 &1842796358508840153
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668671609615931044}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0014923811, y: -0.0029848963}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.25, y: 1}
+    newSize: {x: 2, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.1276224, y: 0.8806071}
+  m_EdgeRadius: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Food : MonoBehaviour
+public abstract class Food : Item
 {
 
     public enum PathType { Sweet, Meat, Veggie, Pathless}
@@ -15,7 +15,7 @@ public abstract class Food : MonoBehaviour
     public virtual int BASE_REWARD { get; } = 0;
 
     /**Name of this food.*/
-    public virtual string NAME { get; } = "Food";
+    public override string NAME { get; } = "Food";
 
     /**Returns true if this Food should perform its ability.*/
     public abstract bool AbilityConditionMet();

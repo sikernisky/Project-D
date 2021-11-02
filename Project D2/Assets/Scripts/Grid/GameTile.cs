@@ -127,8 +127,6 @@ public class GameTile
       (3) direction: the direction (NESW) this tile is facing. */
     public void AdaptTile(GameObject tileToAdapt, Vector2 size, Conveyor.Direction direction)
     {
-        Debug.Log(direction);
-
         objectHolding = tileToAdapt;
 
         Transform tileToAdaptTransform = tileToAdapt.transform;
@@ -144,7 +142,7 @@ public class GameTile
 
         tileToAdaptTransform.localScale = new Vector2(GridIn.CellSize + .01f, GridIn.CellSize + .01f);
         tileToAdaptTransform.SetParent(GridIn.ParentGameObject);
-        if (tileToAdapt.GetComponent<Item>() != null) tileToAdapt.GetComponent<Item>().AssignGameTile(this);
+        if (tileToAdapt.GetComponent<FluidItem>() != null) tileToAdapt.GetComponent<FluidItem>().AssignGameTile(this);
 
         TileSetUp = true;
     }

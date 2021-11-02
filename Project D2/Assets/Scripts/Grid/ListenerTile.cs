@@ -10,6 +10,10 @@ public class ListenerTile : MonoBehaviour
     /**The GameTile this ListerTile corresponds to. */
     public GameTile tileGameTile { get; set; }
 
+    /**The Item the mouse is hovering over. */
+    public static Item ItemHovering { get; private set; }
+
+
     public void SetCoordinates()
     {
         Coordinates = new Vector2(tileGameTile.X, tileGameTile.Y);
@@ -27,13 +31,9 @@ public class ListenerTile : MonoBehaviour
         gameObject.AddComponent<BoxCollider2D>().size = new Vector2(1,1);
     }
 
-    public void OnMouseDown()
+    private void Update()
     {
 
-        GameTile clickedTile = GameGridMaster.MoveablesGameGrid.GetTileFromGrid(Coordinates);
-        if (clickedTile.Occupied) Debug.Log(clickedTile.GameTileName);
-        else Debug.Log("Not occupied.");
-
-        //Debug.Log(tileGameTile.X + ", " + tileGameTile.Y);
     }
+
 }

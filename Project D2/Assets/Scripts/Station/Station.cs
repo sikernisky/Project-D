@@ -3,15 +3,23 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Station : Item, IAnimator
+public class Station : FluidItem, IAnimator
 {
 
     /**Name of this Station. Corresponds to its Class name. */
     public override string NAME { get; } = "Station";
 
-    /** A list of Foods this Station can interact with, or:
-     * A list of one element with value "All", indicating it can take any food.*/
-    public virtual string[] ItemsCanTake { get; } = { "All" };
+    /** All items that can be dragged and dropped onto/into this Item.
+     *  If any item can be dragged to this item, it contains one element "All"
+     *  If no item can be dragged to this item, it contains no elements or is null. */
+    public override string[] ItemsCanTakeByDragging { get; } = { "All" };
+
+
+    /** All items that can be moved onto/into this Item from an IMover.
+     *  If any item can be moved to this item, it contains one element "All"
+     *  If no item can be moved to this item, it contains no elements or is null. */
+    public override string[] ItemsCanTakeByMovement { get; } = { "All" };
+
 
     /**A list of this Station's Holders. Null if it has none. */
     public StationHolder[] Holders { get; protected set; }
@@ -29,6 +37,11 @@ public class Station : Item, IAnimator
     public const int NUM_MOVEMENT_TICKS = 6;
 
 
+    public override void TakeDraggedItem(ItemScriptable item)
+    {
+        return;
+    }
+
     protected virtual void Start()
     {
         Scriptable = (StationScriptable)ItemGenerator.GetScriptableObject(NAME);
@@ -38,12 +51,6 @@ public class Station : Item, IAnimator
     }
 
 
-    /** Returns true of this Station can process the item. */
-    public bool CanProcess(string itemName)
-    {
-        if (ItemsCanTake[0] == "All" || Array.IndexOf(ItemsCanTake, itemName) >= 0) return true;
-        return false;
-    }
 
     /**Sets up all necessary holders for this station. */
     public virtual void SetUpHolders()
@@ -51,22 +58,19 @@ public class Station : Item, IAnimator
     }
 
     /**DEFINE ME.*/
-    public override void TakeItem(GameObject item)
+    public override void TakeMovedItem(GameObject item)
     {
-        item.transform.SetParent(transform);
-        item.transform.localPosition = new Vector2(0, 0);
-
-        HoldItem(item);
+        HoldMovedItem(item);
     }
 
-    public virtual void HoldItem(GameObject item)
+    public virtual void HoldMovedItem(GameObject item)
     {
-        ProcessItem(item);
+        ProcessMovedItem(item);
     }
 
     /** Places its first item in the most available Holder, holds it, then passes it to the 
  *  next appropriate GameTile.*/
-    public virtual void ProcessItem(GameObject item)
+    public virtual void ProcessMovedItem(GameObject item)
     {
         MoveItem(item);
     }
@@ -78,18 +82,19 @@ public class Station : Item, IAnimator
         StartCoroutine(MoveItemCoro(item));
     }
 
+
     IEnumerator MoveItemCoro(GameObject item)
     {
         yield return new WaitForSeconds(TimeToProcess);
 
         if(GameTileIn.NextGameTile.objectHolding == null)
         {
-            DestroyItem(item);
+            DestroyMovedItem(item);
             yield break;
         }
 
         Vector3 targetDestination = GameTileIn.NextGameTile.objectHolding.transform.position;
-        Vector3 distanceToTravel = targetDestination - item.transform.position;
+        Vector3 distanceToTravel = targetDestination - item.gameObject.transform.position;
         Vector3 distancePerTick = distanceToTravel / NUM_MOVEMENT_TICKS;
         float secondsBetweenTick = .5f / NUM_MOVEMENT_TICKS;
 
@@ -99,18 +104,18 @@ public class Station : Item, IAnimator
             yield return new WaitForSeconds(secondsBetweenTick);
         }
 
-        if (GameTileIn.NextGameTile.objectHolding == null) DestroyItem(item);
-        else GiveItem(item, GameTileIn.NextGameTile.objectHolding.GetComponent<Item>());
+        if (GameTileIn.NextGameTile.objectHolding == null) DestroyMovedItem(item);
+        else GiveMovedItem(item, GameTileIn.NextGameTile.objectHolding.GetComponent<FluidItem>());
     }
 
     /**Destroys an item held in one of this Station's Holders.*/
-    public override void DestroyItem(GameObject item)
+    public override void DestroyMovedItem(GameObject item)
     {
         Destroy(item);
     }
 
     /**Cashes an item in.*/
-    public override void CashItemIn(GameObject item)
+    public override void CashMovedItemIn(GameObject item)
     {
 
     }

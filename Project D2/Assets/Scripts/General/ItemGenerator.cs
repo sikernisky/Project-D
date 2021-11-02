@@ -35,5 +35,15 @@ public class ItemGenerator
         return classFromString;
     }
 
+    public static Item GetItemFromString(string itemName)
+    {
+        Type toAdd = GetClassFromString(itemName);
+        GameObject transfer = new GameObject();
+        transfer.AddComponent(toAdd);
+        Item component = transfer.GetComponent<Item>();
+        GameObject.Destroy(transfer);
+        return component;
+    }
+
 
 }

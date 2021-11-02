@@ -132,7 +132,12 @@ public class GameGridMaster : MonoBehaviour
                 MoveablesGameGrid.FillTile(14,24, 1,1, ItemGenerator.DefaultConveyorPath,"DefaultConveyor", north);
                 MoveablesGameGrid.FillTile(14,25,1,1,ItemGenerator.DefaultConveyorPath,"DefaultConveyor", north, 13, 26);
     
-                MoveablesGameGrid.FillTile(13,26, 3,2, ItemGenerator.ServeStationPath,"ServeStation", north);
+                MoveablesGameGrid.FillTile(13,26, 3,2, ItemGenerator.ServeStationPath,"ServeStation", north, 14, 27);
+                MoveablesGameGrid.FillTile(14, 27, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTile(14, 28, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTile(14, 29, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+
+
 
                 break;
             default:

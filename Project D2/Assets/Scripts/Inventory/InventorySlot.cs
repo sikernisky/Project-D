@@ -110,6 +110,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
         CameraControl.CanDragCamera = false;
         draggableImage.gameObject.transform.position = Input.mousePosition;
         slotImage.sprite = defaultSlotSprite;
+        Inventory.FoodDragging = ItemHolding;
     }
 
     /**Drops this draggable Image sprite. */
@@ -119,8 +120,14 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
         draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition = ReturnPosition;
         slotImage.sprite = ItemHolding.slotBackground;
 
-        //DELETE ME!!
+        if(ListenerTile.ItemHovering != null)
+        {
+            FluidItem itemHovering = (FluidItem) ListenerTile.ItemHovering;
+            if (itemHovering.CanDragTo(ItemHolding)) itemHovering.TakeDraggedItem(ItemHolding);
+        }
+
         ItemRemaining = parentInventory.DecrementItem(ItemHolding);
+        Inventory.FoodDragging = null;
     }
 
 
@@ -129,6 +136,8 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     {
         return true;
     }
+
+
 
 
 

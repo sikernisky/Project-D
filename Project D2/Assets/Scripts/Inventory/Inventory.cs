@@ -12,7 +12,7 @@ public class Inventory : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     /**The GameObject that holds all slots in the Hierarchy. Set in Start(). */
     private GameObject slotMaster;
 
-    public static FoodScriptable FoodDragging { get; set; }
+    public static ItemScriptable FoodDragging { get; set; }
 
     public LinkedList<ItemScriptable> OrderedInventoryItems { get; private set; }
 

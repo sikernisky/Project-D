@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Conveyor : Item, IAnimator
+public class Conveyor : FluidItem, IAnimator
 {
     public enum Direction {North, East, South, West}
 
@@ -31,11 +31,22 @@ public class Conveyor : Item, IAnimator
     public const int NUM_MOVEMENT_TICKS = 6;
 
     /**The direction of this Conveyor. */
-
     public Direction ConveyorDirection { get; set; }
 
+
+    /** All items that can be dragged and dropped onto/into this Item.
+ *  If any item can be dragged to this item, it contains one element "All"
+ *  If no item can be dragged to this item, it contains no elements or is null. */
+    public override string[] ItemsCanTakeByDragging { get; } = { "All" };
+
+
+    /** All items that can be moved onto/into this Item from an IMover.
+     *  If any item can be moved to this item, it contains one element "All"
+     *  If no item can be moved to this item, it contains no elements or is null. */
+    public override string[] ItemsCanTakeByMovement { get; } = { "All" };
+
     /**Destroys an item on this conveyor.*/
-    public override void DestroyItem(GameObject item)
+    public override void DestroyMovedItem(GameObject item)
     {
         Destroy(item);
     }
@@ -43,7 +54,13 @@ public class Conveyor : Item, IAnimator
     /**Moves this item across the conveyor.*/
     public override void MoveItem(GameObject item)
     {
-        StartCoroutine(MoveItemCoro(item));
+        if (GameTileIn.NextGameTile == null) DestroyMovedItem(item);
+        else StartCoroutine(MoveItemCoro(item));
+    }
+
+    public override void TakeDraggedItem(ItemScriptable item)
+    {
+        return;
     }
 
     IEnumerator MoveItemCoro(GameObject item)
@@ -59,25 +76,22 @@ public class Conveyor : Item, IAnimator
             yield return new WaitForSeconds(secondsBetweenTick);
         }
 
-        GiveItem(item, GameTileIn.NextGameTile.objectHolding.GetComponent<Item>());
+        GiveMovedItem(item, GameTileIn.NextGameTile.objectHolding.GetComponent<FluidItem>());
     }
 
     /**DEFINE ME*/
-    public override void TakeItem(GameObject item)
+    public override void TakeMovedItem(GameObject item)
     {
-        item.transform.SetParent(transform);
-        item.transform.localPosition = new Vector2(0, 0);
-
-        ProcessItem(item);
+        ProcessMovedItem(item);
     }
 
-    public virtual void ProcessItem(GameObject item)
+    public virtual void ProcessMovedItem(GameObject item)
     {
         MoveItem(item);
     }
 
     /**Cashes an item in.*/
-    public override void CashItemIn(GameObject item)
+    public override void CashMovedItemIn(GameObject item)
     {
 
     }

@@ -6,49 +6,67 @@ public class ServeStation : Station
 {
     public override string NAME { get; } = "ServeStation";
 
-    public override string[] ItemsCanTake { get; } = {
+    public override string[] ItemsCanTakeByMovement { get; } = {
         "All" };
+
+    public override string[] ItemsCanTakeByDragging { get; } = {
+        "Broccoli" };
 
     public override float TimeToProcess { get; } = 1.0f;
 
+    public StationHolder leftHolder;
+
+    public StationHolder rightHolder;
+
+    public Sprite closedHolderSprite;
 
     protected override void Start()
     {
         base.Start();
+        Holders = new StationHolder[2];
+        Holders[0] = leftHolder;
+        Holders[1] = rightHolder;
         foreach (StationHolder holder in Holders)
         {
             holder.HolderAnimation = PlayAnimation(HolderAnimationTrack, .2f, holder.HolderSpriteRenderer);
+            holder.ItemsCanTakeByDragging = ItemsCanTakeByDragging;
+            holder.ItemsCanTakeByMovement = ItemsCanTakeByMovement;
         }
     }
 
-    /**Set up TWO holders: a left holder and a right holder. */
-    public override void SetUpHolders()
-    {
-        Holders = new StationHolder[2];
-        Holders[0] = transform.GetChild(0).GetComponent<StationHolder>();
-        Holders[1] = transform.GetChild(1).GetComponent<StationHolder>();
-    }
 
-    public override void HoldItem(GameObject item)
+    public override void HoldMovedItem(GameObject item)
     {
         StartCoroutine(HoldItemCoro(item));
+    }
+
+    public override void ProcessMovedItem(GameObject item)
+    {
+        base.ProcessMovedItem(item);
     }
 
     IEnumerator HoldItemCoro(GameObject item)
     {
         StationHolder holder = null;
-        if (!Holders[0].HoldingObject) holder = Holders[0].HoldItem(item);
-        else if (!Holders[1].HoldingObject) holder = Holders[1].HoldItem(item);
-        if (item.GetComponent<SpriteRenderer>() != null) item.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 0);
+
+        if (!leftHolder.Occupied) holder = leftHolder.HoldItem(item);
+        else if (!rightHolder.Occupied) holder = rightHolder.HoldItem(item);
+        else { DestroyMovedItem(item); yield break; }
 
         yield return new WaitForSeconds(TimeToProcess);
 
-        if (item.GetComponent<SpriteRenderer>() != null) item.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
-
-
-        if (holder != null) holder.ReleaseItem();
-        ProcessItem(item);
+        if(holder.Occupied) holder.ReleaseHeldItem();
+        ProcessMovedItem(item);
     }
+
+    public override void TakeDraggedItem(ItemScriptable item)
+    {
+        if (!leftHolder.Queued)
+        {
+            leftHolder.QueueItem(item, closedHolderSprite);
+        }
+    }
+
 
 
 

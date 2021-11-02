@@ -4,13 +4,13 @@ using UnityEngine;
 
 public interface IMover
 {
-    void TakeItem(GameObject item);
+    void TakeMovedItem(GameObject item);
 
     void MoveItem(GameObject item);
 
-    void GiveItem(GameObject item, Item target);
+    void GiveMovedItem(GameObject item, FluidItem target);
 
-    void DestroyItem(GameObject item);
+    void DestroyMovedItem(GameObject item);
 
-    void CashItemIn(GameObject item);
+    void CashMovedItemIn(GameObject item);
 }
