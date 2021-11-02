@@ -51,21 +51,34 @@ public class Conveyor : FluidItem, IAnimator
         Destroy(item);
     }
 
-    /**Moves this item across the conveyor.*/
+
+
+    /**Moves item to its next tile's TargetPosition.*/
     public override void MoveItem(GameObject item)
     {
-        if (GameTileIn.NextGameTile == null) DestroyMovedItem(item);
-        else StartCoroutine(MoveItemCoro(item));
+        if (!CanContinue(this)) DestroyMovedItem(item);
+        else {
+            FluidItem next = GameTileIn.NextGameTile.objectHolding.GetComponent<FluidItem>();
+            StartCoroutine(MoveItemCoro(item, GameTileIn.NextGameTile.objectHolding.GetComponent<FluidItem>().GetTargetDestination()));
+        }
     }
 
-    public override void TakeDraggedItem(ItemScriptable item)
+    /**Moves item to targetDestination.*/
+    public override void MoveItem(GameObject item, Vector3 targetDestination)
     {
-        return;
+        if (!CanContinue(this)) DestroyMovedItem(item);
+        else StartCoroutine(MoveItemCoro(item, targetDestination));
     }
 
-    IEnumerator MoveItemCoro(GameObject item)
+
+    IEnumerator MoveItemCoro(GameObject item, Vector3 targetDestination)
     {
-        Vector3 targetDestination = GameTileIn.NextGameTile.objectHolding.transform.position;
+        if(GameTileIn.NextGameTile.objectHolding.GetComponent<Station>() != null)
+        {
+            Station next = GameTileIn.NextGameTile.objectHolding.GetComponent<Station>();
+            next.MoveToHolder(item);
+        }
+
         Vector3 distanceToTravel = targetDestination - item.transform.position;
         Vector3 distancePerTick = distanceToTravel / NUM_MOVEMENT_TICKS;
         float secondsBetweenTick = ConveyorSpeed / NUM_MOVEMENT_TICKS;
@@ -87,28 +100,31 @@ public class Conveyor : FluidItem, IAnimator
 
     public virtual void ProcessMovedItem(GameObject item)
     {
-        MoveItem(item);
+       MoveItem(item);
     }
 
-    /**Cashes an item in.*/
-    public override void CashMovedItemIn(GameObject item)
-    {
-
-    }
-
-    /**Gathers all animation sprites from Scriptable and stores them in this class.*/
-
-    public virtual void SetUpAnimationTracks() {
-        MovementAnimationTrack = Scriptable.conveyorMovementAnimationTrack;
-    }
     
-    public void Start()
+    protected override void Start()
     {
+        base.Start();
         ConveyorSpriteRenderer = GetComponent<SpriteRenderer>();
         Scriptable = (ConveyorScriptable)ItemGenerator.GetScriptableObject(NAME);
         SetUpAnimationTracks();
         MovementCoroutine = PlayAnimation(MovementAnimationTrack, MovementAnimationSpeed, ConveyorSpriteRenderer);
     }
+
+    public override void TakeDraggedItem(ItemScriptable item)
+    {
+        return;
+    }
+
+    /**Gathers all animation sprites from Scriptable and stores them in this class.*/
+
+    public virtual void SetUpAnimationTracks()
+    {
+        MovementAnimationTrack = Scriptable.conveyorMovementAnimationTrack;
+    }
+
 
     /**Plays an animation and stores its Coroutine object.*/
     public Coroutine PlayAnimation(Sprite[] animationTrackToPlay, float secondsBetween, SpriteRenderer rendererToAnimate)
@@ -139,4 +155,11 @@ public class Conveyor : FluidItem, IAnimator
     {
         StopCoroutine(animationToStop);
     }
+
+    /**Cashes an item in.*/
+    public override void CashMovedItemIn(GameObject item)
+    {
+
+    }
+
 }

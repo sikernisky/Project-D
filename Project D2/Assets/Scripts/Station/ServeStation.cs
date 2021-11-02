@@ -12,7 +12,7 @@ public class ServeStation : Station
     public override string[] ItemsCanTakeByDragging { get; } = {
         "Broccoli" };
 
-    public override float TimeToProcess { get; } = 1.0f;
+    public override float TimeToProcess { get; } = 3.5f;
 
     public StationHolder leftHolder;
 
@@ -20,9 +20,12 @@ public class ServeStation : Station
 
     public Sprite closedHolderSprite;
 
+    public List<StationHolder> HolderQueue { get; private set; }
+
     protected override void Start()
     {
         base.Start();
+        HolderQueue = new List<StationHolder>();
         Holders = new StationHolder[2];
         Holders[0] = leftHolder;
         Holders[1] = rightHolder;
@@ -34,10 +37,29 @@ public class ServeStation : Station
         }
     }
 
+    void Update()
+    {
+
+    }
 
     public override void HoldMovedItem(GameObject item)
     {
         StartCoroutine(HoldItemCoro(item));
+    }
+
+    public override void MoveToHolder(GameObject item)
+    {
+        if (leftHolder.transform.position == GetTargetDestination())
+        {
+            leftHolder.HoldItem(item);
+            HolderQueue.Add(leftHolder);
+        }
+        else if (rightHolder.transform.position == GetTargetDestination())
+        {
+            rightHolder.HoldItem(item);
+            HolderQueue.Add(rightHolder);
+        }
+        else DestroyMovedItem(item);
     }
 
     public override void ProcessMovedItem(GameObject item)
@@ -47,15 +69,9 @@ public class ServeStation : Station
 
     IEnumerator HoldItemCoro(GameObject item)
     {
-        StationHolder holder = null;
-
-        if (!leftHolder.Occupied) holder = leftHolder.HoldItem(item);
-        else if (!rightHolder.Occupied) holder = rightHolder.HoldItem(item);
-        else { DestroyMovedItem(item); yield break; }
-
         yield return new WaitForSeconds(TimeToProcess);
-
-        if(holder.Occupied) holder.ReleaseHeldItem();
+        HolderQueue[0].ReleaseHeldItem();
+        HolderQueue.RemoveAt(0);
         ProcessMovedItem(item);
     }
 
@@ -65,6 +81,15 @@ public class ServeStation : Station
         {
             leftHolder.QueueItem(item, closedHolderSprite);
         }
+    }
+
+    public override Vector3 GetTargetDestination()
+    {
+        Vector3 correctPosition = new Vector3(-1,-1,-1);
+        if (!leftHolder.Occupied && !rightHolder.Occupied) correctPosition = leftHolder.transform.position;
+        else if (leftHolder.Occupied && !rightHolder.Occupied) correctPosition = rightHolder.transform.position;
+        else if (!leftHolder.Occupied && rightHolder.Occupied) correctPosition = leftHolder.transform.position;
+        return correctPosition;
     }
 
 

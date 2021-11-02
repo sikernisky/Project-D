@@ -17,6 +17,17 @@ public abstract class FluidItem : Item, IMover
     /** All items that can be moved onto/into this FluidItem from an IMover. */
     public abstract string[] ItemsCanTakeByMovement { get; }
 
+    /** The Vector3 position that items should move to when sent to this FluidItem. */
+    public Vector3 TargetPosition { get; protected set; }
+
+
+    protected virtual void Start()
+    {
+        TargetPosition = GetTargetDestination();
+    }
+
+
+
     /**Return true if itemBeingDragged can be dragged to this FluidItem; false otherwise. */
     public bool CanDragTo(ItemScriptable itemBeingDragged)
     {
@@ -51,7 +62,7 @@ public abstract class FluidItem : Item, IMover
     /**Gives an item it holds to another IMover.*/
     public virtual void GiveMovedItem(GameObject item, FluidItem target)
     {
-        if (target != null && GameTileIn.NextGameTile.TileSetUp)
+        if (target != null)
         {
             target.TakeMovedItem(item);
         }
@@ -59,6 +70,33 @@ public abstract class FluidItem : Item, IMover
     }
 
     public abstract void MoveItem(GameObject item);
+
+    public abstract void MoveItem(GameObject item, Vector3 targetDestination);
+
+    public virtual Vector3 GetTargetDestination()
+    {
+        TargetPosition = GameTileIn.objectHolding.transform.position; 
+        return GameTileIn.objectHolding.transform.position;
+    }
+
+    public virtual bool CanContinue(FluidItem item)
+    {
+        if (item.GameTileIn.NextGameTile == null) return false;
+        if (!item.GameTileIn.NextGameTile.Occupied) return false;
+
+        if (item.GameTileIn.NextGameTile.objectHolding.GetComponent<Station>() != null)
+        {
+            bool available = false;
+            Station nextStation = item.GameTileIn.NextGameTile.objectHolding.GetComponent<Station>();
+            foreach (StationHolder station in nextStation.Holders)
+            {
+                if (!station.Occupied) available = true;
+            }
+            if (!available) return false;
+        }
+
+        return true;
+    }
 
     public abstract void TakeMovedItem(GameObject item);
 

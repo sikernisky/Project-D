@@ -39,7 +39,6 @@ public class PlateStation : Station
 
     public override void ProcessMovedItem(GameObject item)
     {
-        item.transform.localScale = new Vector2(2, 2);
         base.ProcessMovedItem(item);
     }
 
@@ -49,7 +48,7 @@ public class PlateStation : Station
     {
         if (Input.GetKeyDown(KeyCode.B))
         {
-            ProcessMovedItem(plateHolding);
+            HoldMovedItem(plateHolding);
             SpawnPlate();
         }
     }

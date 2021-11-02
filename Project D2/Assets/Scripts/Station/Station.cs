@@ -36,33 +36,33 @@ public class Station : FluidItem, IAnimator
     /**The number of times a GameObject on this Station moves closer to its target.*/
     public const int NUM_MOVEMENT_TICKS = 6;
 
-
+    /**Accepts an item dragged onto this station from the Inventory.*/
     public override void TakeDraggedItem(ItemScriptable item)
     {
         return;
     }
 
-    protected virtual void Start()
+    /**Get the scriptable object of this station. Set up animations and holders.*/
+    protected override void Start()
     {
+        base.Start();
         Scriptable = (StationScriptable)ItemGenerator.GetScriptableObject(NAME);
         SetUpAnimationTracks();
         SetUpHolders();
-
     }
-
-
 
     /**Sets up all necessary holders for this station. */
     public virtual void SetUpHolders()
     {
     }
 
-    /**DEFINE ME.*/
+    /**Claims an item and performs any necessary actions before HoldMovedItem() is called.*/
     public override void TakeMovedItem(GameObject item)
     {
         HoldMovedItem(item);
     }
 
+    /**Calls ProcessMovedItem. Child classes may override to perform necessary actions.*/
     public virtual void HoldMovedItem(GameObject item)
     {
         ProcessMovedItem(item);
@@ -73,27 +73,38 @@ public class Station : FluidItem, IAnimator
     public virtual void ProcessMovedItem(GameObject item)
     {
         MoveItem(item);
+        TargetPosition = GetTargetDestination();
+    }
+
+    public virtual void MoveToHolder(GameObject item)
+    {
+        return;
     }
 
 
-    /**Moves this item from a Holder to the next appropriate GameTile.*/
+    /**Moves this item from a Holder to the next appropriate GameTile's transform.position.*/
     public override void MoveItem(GameObject item)
     {
-        StartCoroutine(MoveItemCoro(item));
+        if (!CanContinue(this)) DestroyMovedItem(item);
+        StartCoroutine(MoveItemCoro(item, GameTileIn.NextGameTile.objectHolding.transform.position));
     }
 
-
-    IEnumerator MoveItemCoro(GameObject item)
+    /**Moves this item from a Holder to targetDestination.*/
+    public override void MoveItem(GameObject item, Vector3 targetDestination)
     {
-        yield return new WaitForSeconds(TimeToProcess);
+        if (!CanContinue(this)) DestroyMovedItem(item);
+        StartCoroutine(MoveItemCoro(item, targetDestination));
+    }
 
+    /**Move item to targetDestination and call GiveMovedItem(). */
+    IEnumerator MoveItemCoro(GameObject item, Vector3 targetDestination)
+    {
         if(GameTileIn.NextGameTile.objectHolding == null)
         {
             DestroyMovedItem(item);
             yield break;
         }
 
-        Vector3 targetDestination = GameTileIn.NextGameTile.objectHolding.transform.position;
         Vector3 distanceToTravel = targetDestination - item.gameObject.transform.position;
         Vector3 distancePerTick = distanceToTravel / NUM_MOVEMENT_TICKS;
         float secondsBetweenTick = .5f / NUM_MOVEMENT_TICKS;
@@ -113,6 +124,11 @@ public class Station : FluidItem, IAnimator
     {
         Destroy(item);
     }
+
+
+
+
+
 
     /**Cashes an item in.*/
     public override void CashMovedItemIn(GameObject item)
@@ -143,13 +159,15 @@ public class Station : FluidItem, IAnimator
         }
     }
 
-    public virtual void StopAnimation(Coroutine animationToStop)
-    {
-        throw new NotImplementedException();
-    }
-
+    /**Sets up any necessary animation tracks for this station. */
     public virtual void SetUpAnimationTracks()
     {
         HolderAnimationTrack = Scriptable.holderReadyAnimationTrack;
     }
+
+    public void StopAnimation(Coroutine animationToStop)
+    {
+        throw new NotImplementedException();
+    }
+
 }

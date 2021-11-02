@@ -49,15 +49,10 @@ public class StationHolder : MonoBehaviour
     public string[] ItemsCanTakeByMovement { get; set; }
 
 
-    public StationHolder HoldItem(GameObject itemToHold)
+    public void HoldItem(GameObject itemToHold)
     {
-        if (!Occupied)
-        {
-            ItemHolding = itemToHold;
-            Occupied = true;
-            return this;
-        }
-        return null;
+        ItemHolding = itemToHold;
+        Occupied = true;
     }
 
     public void QueueItem(ItemScriptable itemToQueueScriptable, Sprite newHolderSprite = null)
@@ -96,14 +91,6 @@ public class StationHolder : MonoBehaviour
     private void Start()
     {
         HolderPosition = transform.localPosition;
-    }
-
-    private void Update()
-    {
-        if(Queued && Occupied)
-        {
-            ApplyQueuedItemToHeldItem();
-        }
     }
 
 

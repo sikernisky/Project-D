@@ -95,7 +95,7 @@ public class GameGridMaster : MonoBehaviour
     {
         Conveyor.Direction north = Conveyor.Direction.North;
         Conveyor.Direction east = Conveyor.Direction.East;
-        Conveyor.Direction south = Conveyor.Direction.South;
+        //Conveyor.Direction south = Conveyor.Direction.South;
         Conveyor.Direction west = Conveyor.Direction.West;
 
 
