@@ -10,6 +10,14 @@ public class ItemGenerator
     public static string PlateStationPath { get; } = "Prefabs/StationPrefabs/PlateStationPrefab";
     public static string ServeStationPath { get; } = "Prefabs/StationPrefabs/ServeStationPrefab";
 
+    public static string SingleHorizontalFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleHorizontalFencePrefab";
+    public static string SingleVerticalFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleVerticalFencePrefab";
+    public static string SingleTopLeftFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleTopLeftEndFencePrefab";
+    public static string SingleBotLeftFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleBotLeftEndFencePrefab";
+    public static string SingleTopRightFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleTopRightEndFencePrefab";
+    public static string SingleBotRightFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleBotRightEndFencePrefab";
+
+
     /**Returns the ItemScriptable with the itemName. If not found, returns a default FoodScriptable. */
     public static ItemScriptable GetScriptableObject(string itemName)
     {

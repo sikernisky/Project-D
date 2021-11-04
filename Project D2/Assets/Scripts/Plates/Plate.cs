@@ -20,9 +20,16 @@ public class Plate : MonoBehaviour
     /**Adds a Food to this plate. Precondition: foodToAdd must correspond to a Food class. */
     public void AddFoodToPlate(FoodScriptable foodToAdd)
     {
-        if (GetNextOpenSlot() == null) return; Debug.Log("No available slots on this plate.");
-        gameObject.AddComponent(ItemGenerator.GetClassFromString(foodToAdd.itemClassName));
-        GetNextOpenSlot().AddFoodSpriteToSlot(foodToAdd.plateSprite, foodToAdd.itemClassName);
+        if (GetNextOpenSlot() == null)
+        {
+            Debug.Log("No available slots on this plate.");
+            return;
+        }
+        else{
+            gameObject.AddComponent(ItemGenerator.GetClassFromString(foodToAdd.itemClassName));
+            GetNextOpenSlot().AddFoodSpriteToSlot(foodToAdd.plateSprite, foodToAdd.itemClassName);
+        }
+ 
         
     }
 

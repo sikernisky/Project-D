@@ -10,8 +10,8 @@ public class ListenerTile : MonoBehaviour
     /**The GameTile this ListerTile corresponds to. */
     public GameTile tileGameTile { get; set; }
 
-    /**The Item the mouse is hovering over. */
-    public static Item ItemHovering { get; private set; }
+    /**The FluidItem the mouse is hovering over. */
+    public static FluidItem MoveablesItemHovering { get; private set; }
 
 
     public void SetCoordinates()
@@ -31,9 +31,25 @@ public class ListenerTile : MonoBehaviour
         gameObject.AddComponent<BoxCollider2D>().size = new Vector2(1,1);
     }
 
-    private void Update()
+    private void OnMouseOver()
     {
-
+        AssignMoveablesItemHovering();
     }
 
+    private void AssignMoveablesItemHovering()
+    {
+        if (GameGridMaster.MoveablesGameGrid.GetTileFromGrid(Coordinates) != null)
+        {
+            if (GameGridMaster.MoveablesGameGrid.GetTileFromGrid(Coordinates).objectHolding != null)
+            {
+                if (GameGridMaster.MoveablesGameGrid.GetTileFromGrid(Coordinates).objectHolding.GetComponent<FluidItem>() != null)
+                {
+                    MoveablesItemHovering = GameGridMaster.MoveablesGameGrid.GetTileFromGrid(Coordinates).objectHolding.GetComponent<FluidItem>();
+                }
+                else MoveablesItemHovering = null;
+            }
+            else MoveablesItemHovering = null;
+        }
+        else MoveablesItemHovering = null;
+    }
 }

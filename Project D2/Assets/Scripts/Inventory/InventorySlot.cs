@@ -44,6 +44,9 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     /**The position this Item's GameObject returns to OnDrop. */
     public Vector3 ReturnPosition { get; private set; }
 
+    /**The ItemScriptable that the user is dragging; null if the player is dragging nothing */
+    public static ItemScriptable FoodDragging { get; private set; }
+
     private void Start()
     {
         slotImage = GetComponent<Image>();
@@ -110,7 +113,8 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
         CameraControl.CanDragCamera = false;
         draggableImage.gameObject.transform.position = Input.mousePosition;
         slotImage.sprite = defaultSlotSprite;
-        Inventory.FoodDragging = ItemHolding;
+        FoodDragging = ItemHolding;
+        HighlightAvailableDragSpots(GameGridMaster.MoveablesGameGrid, FoodDragging);
     }
 
     /**Drops this draggable Image sprite. */
@@ -118,16 +122,14 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     {
         CameraControl.CanDragCamera = true;
         draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition = ReturnPosition;
-        slotImage.sprite = ItemHolding.slotBackground;
+        UnHighlightAvailableDragSpots(GameGridMaster.MoveablesGameGrid);
 
-        if(ListenerTile.ItemHovering != null)
+        if (ListenerTile.MoveablesItemHovering != null && ListenerTile.MoveablesItemHovering.TakeDraggedItem(ItemHolding))
         {
-            FluidItem itemHovering = (FluidItem) ListenerTile.ItemHovering;
-            if (itemHovering.CanDragTo(ItemHolding)) itemHovering.TakeDraggedItem(ItemHolding);
+            ItemRemaining = parentInventory.DecrementItem(ItemHolding);
         }
-
-        ItemRemaining = parentInventory.DecrementItem(ItemHolding);
-        Inventory.FoodDragging = null;
+        slotImage.sprite = ItemHolding.slotBackground;
+        FoodDragging = null;
     }
 
 
@@ -135,6 +137,30 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
     private bool CanDrag()
     {
         return true;
+    }
+
+    private void HighlightAvailableDragSpots(GameGrid grid, ItemScriptable itemBeingDragged)
+    {
+        foreach(GameTile tile in grid.GridArray)
+        {
+            if(tile.Occupied && tile.objectHolding.GetComponent<FluidItem>() != null)
+            {
+                FluidItem fluidItem = tile.objectHolding.GetComponent<FluidItem>();
+                if (fluidItem.CanDragTo(itemBeingDragged)) fluidItem.ColorTileAsDragAvailable();
+            }
+        }
+    }
+
+    private void UnHighlightAvailableDragSpots(GameGrid grid)
+    {
+        foreach (GameTile tile in grid.GridArray)
+        {
+            if (tile.Occupied && tile.objectHolding.GetComponent<FluidItem>() != null)
+            {
+                FluidItem fluidItem = tile.objectHolding.GetComponent<FluidItem>();
+                fluidItem.ColorTileAsDefault();
+            }
+        }
     }
 
 

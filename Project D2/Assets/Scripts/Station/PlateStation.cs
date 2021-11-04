@@ -42,16 +42,17 @@ public class PlateStation : Station
         base.ProcessMovedItem(item);
     }
 
-
-
-    private void Update()
+    public override bool TakeDraggedItem(ItemScriptable item)
     {
-        if (Input.GetKeyDown(KeyCode.B))
+        FoodScriptable itemFood = item as FoodScriptable;
+        if(itemFood != null)
         {
+            plateHolding.GetComponent<Plate>().AddFoodToPlate(itemFood);
             HoldMovedItem(plateHolding);
             SpawnPlate();
+            return true;
         }
+        return false;
     }
-
 
 }

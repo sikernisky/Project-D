@@ -57,15 +57,13 @@ public class StationHolder : MonoBehaviour
 
     public void QueueItem(ItemScriptable itemToQueueScriptable, Sprite newHolderSprite = null)
     {
-        if (!Queued)
-        {
-            StopCoroutine(HolderAnimation);
-            ItemQueuedScriptable = itemToQueueScriptable;
-            ItemQueued = ItemGenerator.GetItemFromString(itemToQueueScriptable.itemClassName);
 
-            Queued = true;
-            if (newHolderSprite != null) HolderSpriteRenderer.sprite = newHolderSprite;
-        }
+        ItemQueuedScriptable = itemToQueueScriptable;
+        ItemQueued = ItemGenerator.GetItemFromString(itemToQueueScriptable.itemClassName);
+
+        Queued = true;
+        if (newHolderSprite != null) HolderSpriteRenderer.sprite = newHolderSprite;
+
     }
 
     public void ReleaseHeldItem()

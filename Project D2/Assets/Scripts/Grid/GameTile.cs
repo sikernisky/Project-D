@@ -29,7 +29,7 @@ public class GameTile
     public bool TileSetUp { get; private set; }
 
     /**The SpriteRenderer component of objectHolding.*/
-    public SpriteRenderer tileSpriteRenderer;
+    public SpriteRenderer objectHoldingSpriteRenderer;
 
     /**The next GameTile to pass items to. Assigned manually.*/
     public GameTile NextGameTile { get; private set; }
@@ -63,19 +63,33 @@ public class GameTile
         GridIn = grid;
     }
 
-    /**Fills this tile with a GameObject. 
+    /**Fills this tile with a GameObject and returns the GameObject. 
      (1) prefabSource: a link to a valid prefab
      (2) nextTile: the next tile of the tile being filled
      (3) name: the name of what this tile is being filled with
      (4) size: the x and y width and height, respectively, of the tile being filled
      (5) direction: the direction (NESW) this tile is facing */
-    public void FillTile(string prefabSource, GameTile nextTile, string name, Vector2 size, Conveyor.Direction direction)
+    public GameObject FillTile(string prefabSource, GameTile nextTile, string name, Vector2 size, Conveyor.Direction direction)
     {
-        if (!TileSetUp) AdaptTile(GameObject.Instantiate(Resources.Load(prefabSource) as GameObject), size, direction);
+        GameObject filledTile = null;
+
+        filledTile = AdaptTile(GameObject.Instantiate(Resources.Load(prefabSource) as GameObject), size, direction);
 
         NextGameTile = nextTile;
 
         OccupyTile(name);
+
+        TileSetUp = true;
+
+        return filledTile;
+    }
+
+    /**Sets Occupied to true and assigns this GameTile a name and objectHolding. */
+    public void OccupyTile(GameObject actualTile, string name)
+    {
+        Occupied = true;
+        GameTileName = name;
+        objectHolding = actualTile;
     }
 
     /**Sets Occupied to true and assigns this GameTile a name. */
@@ -105,6 +119,8 @@ public class GameTile
       (1) spriteToSet: the Sprite to assign to this created tile's SpriteRenderer. */
     public void CreateRealTile(Sprite spriteToSet)
     {
+        if (objectHolding != null) GameObject.Destroy(objectHolding);
+
         GameObject newTile = new GameObject("NewTile");
         objectHolding = newTile;
 
@@ -114,20 +130,21 @@ public class GameTile
         newTileTransform.SetParent(GridIn.ParentGameObject);
 
         newTile.AddComponent<SpriteRenderer>().sprite = spriteToSet;
-        tileSpriteRenderer = objectHolding.GetComponent<SpriteRenderer>();
-        tileSpriteRenderer.sortingOrder = GridIn.SortingOrder;
+        objectHoldingSpriteRenderer = objectHolding.GetComponent<SpriteRenderer>();
+        objectHoldingSpriteRenderer.sortingOrder = GridIn.SortingOrder;
 
-        TileSetUp = true;
     }
 
 
-    /**Modifies an existing GameObject to fit within its assigned tile.
+    /**Modifies an existing GameObject to fit within its assigned tile and returns the modified GameObject.
       (1) tileToAdapt: the existing GameObject to modify.
       (2) size: the x and y width and height, respectively, of this tile.
       (3) direction: the direction (NESW) this tile is facing. */
-    public void AdaptTile(GameObject tileToAdapt, Vector2 size, Conveyor.Direction direction)
+    public GameObject AdaptTile(GameObject tileToAdapt, Vector2 size, Conveyor.Direction direction)
     {
         objectHolding = tileToAdapt;
+
+        if (tileToAdapt.GetComponent<SpriteRenderer>() != null) objectHoldingSpriteRenderer = tileToAdapt.GetComponent<SpriteRenderer>();
 
         Transform tileToAdaptTransform = tileToAdapt.transform;
 
@@ -143,7 +160,6 @@ public class GameTile
         tileToAdaptTransform.localScale = new Vector2(GridIn.CellSize + .01f, GridIn.CellSize + .01f);
         tileToAdaptTransform.SetParent(GridIn.ParentGameObject);
         if (tileToAdapt.GetComponent<FluidItem>() != null) tileToAdapt.GetComponent<FluidItem>().AssignGameTile(this);
-
-        TileSetUp = true;
+        return tileToAdapt;
     }
 }

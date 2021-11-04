@@ -66,13 +66,20 @@ public class GameGrid {
 
     /**Fills each GameTile's SpriteRenderer in GridArray with a random sprite in imagesToFillWith. 
      (1) imagesToFillWith: an array of sprites used to paint the grid.*/
-    public void FillAllTiles(Sprite[] imagesToFillWith)
+    public void CreateAllTiles(Sprite[] imagesToFillWith)
     {
         foreach (GameTile tile in GridArray)
         {
             if (imagesToFillWith == null) tile.CreateRealTile(GetRandomTileSprite(null));
             else tile.CreateRealTile(GetRandomTileSprite(imagesToFillWith));
         }
+    }
+
+    public void CreateTile(int xPos, int yPos, Sprite image)
+    {
+        GameTile tile = GetTileFromGrid(new Vector2(xPos, yPos));
+        if (image == null) tile.CreateRealTile(null);
+        else tile.CreateRealTile(image);
     }
 
     /**Returns a Vector3 that describes the position of a tile based on its x pos, y pos, and cellsize. 
@@ -144,8 +151,9 @@ public class GameGrid {
      * Precondition: prefabSource: links to a valid prefab.
   
      */
-    public void FillTile(int xPos, int yPos, int xSize, int ySize, string prefabSource, string name, Conveyor.Direction direction, int nextXPos = -1, int nextYPos = -1)
+    public void FillTilePrefab(int xPos, int yPos, int xSize, int ySize, string prefabSource, string name, Conveyor.Direction direction, int nextXPos = -1, int nextYPos = -1)
     {
+
         Vector2 nextTilePos;
 
         if(nextXPos == -1 && nextYPos == -1)
@@ -164,17 +172,17 @@ public class GameGrid {
 
         GameTile tileSelected = GetTileFromGrid(proposedLocation);
         if (tileSelected == null) return;
-        tileSelected.FillTile(prefabSource, GetTileFromGrid(nextTilePos), name, tileSize, direction);
+        GameObject actualTile = tileSelected.FillTile(prefabSource, GetTileFromGrid(nextTilePos), name, tileSize, direction);
+        if (actualTile == null) Debug.Log("Tile: " + name + " did not spawn a real tile.");
 
-
-        AssignActiveTiles(proposedLocation, tileSize, name);
+        // We need declare tiles filled by a larger tile occupied
+        if(tileSize.x > 1 || tileSize.y > 1) AssignActiveTiles(proposedLocation, tileSize, actualTile, name);
     }
 
     /**For each GameTile within a size.x by size.y tile placed at location, calls OccupyTile(name).
      * See the specification for FillTile() for more information on large tile placement.*/
-    public void AssignActiveTiles(Vector2 location, Vector2 size, string name)
+    public void AssignActiveTiles(Vector2 location, Vector2 size, GameObject actualTile, string name)
     {
-
         int x = (int) size.x;
         int y = (int) size.y;
 
@@ -183,7 +191,7 @@ public class GameGrid {
             for(int z = (int)location.y; z > location.y - y; z--)
             {
                 GameTile tileSelected = GetTileFromGrid(new Vector2(i, z));
-                tileSelected.OccupyTile(name);
+                tileSelected.OccupyTile(actualTile, name);
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +38,7 @@ public class Conveyor : FluidItem, IAnimator
     /** All items that can be dragged and dropped onto/into this Item.
  *  If any item can be dragged to this item, it contains one element "All"
  *  If no item can be dragged to this item, it contains no elements or is null. */
-    public override string[] ItemsCanTakeByDragging { get; } = { "All" };
+    public override string[] ItemsCanTakeByDragging { get; } = {};
 
 
     /** All items that can be moved onto/into this Item from an IMover.
@@ -76,7 +77,11 @@ public class Conveyor : FluidItem, IAnimator
         if(GameTileIn.NextGameTile.objectHolding.GetComponent<Station>() != null)
         {
             Station next = GameTileIn.NextGameTile.objectHolding.GetComponent<Station>();
-            next.MoveToHolder(item);
+            if (!next.MoveToHolder(item))
+            {
+                DestroyMovedItem(item);
+                yield break;
+            }
         }
 
         Vector3 distanceToTravel = targetDestination - item.transform.position;
@@ -113,9 +118,14 @@ public class Conveyor : FluidItem, IAnimator
         MovementCoroutine = PlayAnimation(MovementAnimationTrack, MovementAnimationSpeed, ConveyorSpriteRenderer);
     }
 
-    public override void TakeDraggedItem(ItemScriptable item)
+    public override bool TakeDraggedItem(ItemScriptable item)
     {
-        return;
+        return false;
+    }
+
+    public override void ReleaseDraggedItem()
+    {
+        throw new NotImplementedException();
     }
 
     /**Gathers all animation sprites from Scriptable and stores them in this class.*/

@@ -4,22 +4,42 @@ using UnityEngine;
 
 public class ServeStation : Station
 {
+    /**The name of this ServeStation. */
     public override string NAME { get; } = "ServeStation";
 
+    /**The string list of items that this ServeStation can take by movement. */
     public override string[] ItemsCanTakeByMovement { get; } = {
         "All" };
 
+    /**The string list of items that this ServeStation can take by dragging. */
     public override string[] ItemsCanTakeByDragging { get; } = {
         "Broccoli" };
 
+    /**The time it takes this station to process an item by movement. */
     public override float TimeToProcess { get; } = 3.5f;
 
+    /**This ServeStation's left StationHolder. */
     public StationHolder leftHolder;
 
+    /**The SpriteRenderer for the left holder's light. */
+    public SpriteRenderer leftHolderLight;
+
+    /**The SpriteRenderer for the right holder's light. */
+    public SpriteRenderer rightHolderLight;
+
+    /**This ServeStation's right StationHolder. */
     public StationHolder rightHolder;
 
+    /**The closed holder Sprite for this ServeStation's holders. */
     public Sprite closedHolderSprite;
 
+    /**The Sprite for this ServeStation's StationHolder's occupied state. */
+    public Sprite holderLightOccupiedSprite;
+
+    /**The Sprite for this ServeStation's StationHolder's vacant state. */
+    public Sprite holderLightVacantSprite;
+
+    /**A FIFO list of this ServeStation's StationHolders. */
     public List<StationHolder> HolderQueue { get; private set; }
 
     protected override void Start()
@@ -35,6 +55,8 @@ public class ServeStation : Station
             holder.ItemsCanTakeByDragging = ItemsCanTakeByDragging;
             holder.ItemsCanTakeByMovement = ItemsCanTakeByMovement;
         }
+        leftHolderLight.sprite = holderLightVacantSprite;
+        rightHolderLight.sprite = holderLightVacantSprite;
     }
 
     void Update()
@@ -42,29 +64,55 @@ public class ServeStation : Station
 
     }
 
+    public override bool CanDragTo(ItemScriptable itemBeingDragged)
+    {
+        if (leftHolder.Queued && rightHolder.Queued) return false;
+        return base.CanDragTo(itemBeingDragged);
+    }
+
     public override void HoldMovedItem(GameObject item)
     {
         StartCoroutine(HoldItemCoro(item));
     }
 
-    public override void MoveToHolder(GameObject item)
+    public override bool MoveToHolder(GameObject item)
     {
         if (leftHolder.transform.position == GetTargetDestination())
         {
             leftHolder.HoldItem(item);
             HolderQueue.Add(leftHolder);
+            return true;
         }
         else if (rightHolder.transform.position == GetTargetDestination())
         {
             rightHolder.HoldItem(item);
             HolderQueue.Add(rightHolder);
+            return true;
         }
-        else DestroyMovedItem(item);
+        else return false;
     }
 
     public override void ProcessMovedItem(GameObject item)
     {
         base.ProcessMovedItem(item);
+    }
+
+    public override bool TakeDraggedItem(ItemScriptable item)
+    {
+        base.TakeDraggedItem(item);
+        if (!leftHolder.Queued)
+        {
+            leftHolder.QueueItem(item);
+            leftHolderLight.sprite = holderLightOccupiedSprite;
+            return true;
+        }
+        else if (!rightHolder.Queued)
+        {
+            rightHolder.QueueItem(item);
+            rightHolderLight.sprite = holderLightOccupiedSprite;
+            return true;
+        }
+        return false;
     }
 
     IEnumerator HoldItemCoro(GameObject item)
@@ -73,14 +121,6 @@ public class ServeStation : Station
         HolderQueue[0].ReleaseHeldItem();
         HolderQueue.RemoveAt(0);
         ProcessMovedItem(item);
-    }
-
-    public override void TakeDraggedItem(ItemScriptable item)
-    {
-        if (!leftHolder.Queued)
-        {
-            leftHolder.QueueItem(item, closedHolderSprite);
-        }
     }
 
     public override Vector3 GetTargetDestination()

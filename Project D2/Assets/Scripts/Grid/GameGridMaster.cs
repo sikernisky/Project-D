@@ -10,6 +10,9 @@ public class GameGridMaster : MonoBehaviour
     /**An array of sprites for ground/base tiles. Assigned in the inspector. */
     public Sprite[] baseTileArray;
 
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloor;
+
     /**The Base Game Grid that we operate on.*/
     public static GameGrid BaseGameGrid { get; private set; }
 
@@ -46,7 +49,7 @@ public class GameGridMaster : MonoBehaviour
     {
         GameObject GroundTilemapParent = new GameObject("GroundTilemapMaster");
         GameGrid grid = new GameGrid(width, height, cellSize, GroundTilemapParent.transform);
-        grid.FillAllTiles(baseTileArray);
+        grid.CreateAllTiles(baseTileArray);
         return grid;
     }
 
@@ -102,8 +105,8 @@ public class GameGridMaster : MonoBehaviour
         switch (levelNumber)
         {
             case 1:
-                GridWidth = 30;
-                GridHeight = 30;
+                GridWidth = 25;
+                GridHeight = 25;
                 break;
             default:
                 GridWidth = 20;
@@ -116,26 +119,26 @@ public class GameGridMaster : MonoBehaviour
         switch (levelNumber)
         {
             case 1:
-                //Fill a tile at (13,15) with size (3,3) and set its next tile to (14,20)
-                MoveablesGameGrid.FillTile(13,19,3,2,ItemGenerator.PlateStationPath, "PlateStation", north, 14, 20);
-                MoveablesGameGrid.FillTile(14,20, 1,1, ItemGenerator.DeluxeConveyorPath,"DeluxeConveyor", west);
-                MoveablesGameGrid.FillTile(13,20,1,1, ItemGenerator.DefaultConveyorPath,"DefaultConveyor", west);
-                MoveablesGameGrid.FillTile(12, 20, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", west);
-                MoveablesGameGrid.FillTile(11, 20, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
-                MoveablesGameGrid.FillTile(11, 21, 1, 1, ItemGenerator.DefaultConveyorPath, "DeluxeConveyor", north);
-                MoveablesGameGrid.FillTile(11, 22, 1, 1, ItemGenerator.DefaultConveyorPath, "DeluxeConveyor", north);
-                MoveablesGameGrid.FillTile(11, 23, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
-                MoveablesGameGrid.FillTile(11, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", east);
-                MoveablesGameGrid.FillTile(12, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", east);
-                MoveablesGameGrid.FillTile(13, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", east);
-                MoveablesGameGrid.FillTile(14, 24, 1, 1, ItemGenerator.DefaultConveyorPath, "DeluxeConveyor", north);
-                MoveablesGameGrid.FillTile(14,24, 1,1, ItemGenerator.DefaultConveyorPath,"DefaultConveyor", north);
-                MoveablesGameGrid.FillTile(14,25,1,1,ItemGenerator.DefaultConveyorPath,"DefaultConveyor", north, 13, 26);
-    
-                MoveablesGameGrid.FillTile(13,26, 3,2, ItemGenerator.ServeStationPath,"ServeStation", north, 14, 27);
-                MoveablesGameGrid.FillTile(14, 27, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
-                MoveablesGameGrid.FillTile(14, 28, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
-                MoveablesGameGrid.FillTile(14, 29, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                //Fill a tile at (13,19) with size (3,2) and set its next tile to (14,20)
+                MoveablesGameGrid.FillTilePrefab(3,2,3,2,ItemGenerator.PlateStationPath, "PlateStation", north, 4, 3);
+                MoveablesGameGrid.FillTilePrefab(4,3, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 4, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 5, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 6, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(3, 7, 3, 2, ItemGenerator.ServeStationPath, "ServeStation", north, 4, 8);
+                MoveablesGameGrid.FillTilePrefab(4, 8, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 9, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 10, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 11, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 12, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 13, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 14, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 15, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(4, 16, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+
+
+
+                SpawnFenceBoundaries(0, true, 6);
 
 
 
@@ -155,5 +158,64 @@ public class GameGridMaster : MonoBehaviour
         MoveablesGameGrid = CreateMoveablesTilemap(width, height);
         PlaceablesGameGrid = CreatePlaceablesTilemap(width, height);
         ListenerGameGrid = CreateListenerTilemap(width, height);
+    }
+
+
+    /**Spawns a fence boundary numTilesOutsideOfBoundary tiles from the edge of the map.
+     * (1) numTilesOutsideOfBoundary: the number of tiles away from the edge of all sides the boundary is spawned, >= 0*/
+    private void SpawnFenceBoundaries(int numTilesOutsideOfBoundary, bool spawnCustomerArea=true, int customerAreaSize = 0)
+    {
+        if (numTilesOutsideOfBoundary < 0) return;
+
+        int yTopBoundary = GridHeight - numTilesOutsideOfBoundary -1;
+        int yBotBoundary = numTilesOutsideOfBoundary;
+
+        int xLeftBoundary = numTilesOutsideOfBoundary;
+        int xRightBoundary = GridWidth - numTilesOutsideOfBoundary -1;
+
+        // Spawn horz and verts
+
+        for(int i = xLeftBoundary; i < xRightBoundary; i++)
+        {
+            BaseGameGrid.FillTilePrefab(i, yTopBoundary, 1, 1, ItemGenerator.SingleHorizontalFencePath, "SingleHorizontalFence", Conveyor.Direction.North);
+            BaseGameGrid.FillTilePrefab(i, yBotBoundary, 1, 1, ItemGenerator.SingleHorizontalFencePath, "SingleHorizontalFence", Conveyor.Direction.North);
+        }
+
+        for(int i = yBotBoundary; i < yTopBoundary; i++)
+        {
+
+            BaseGameGrid.FillTilePrefab(xLeftBoundary,i, 1, 1, ItemGenerator.SingleVerticalFencePath, "SingleVerticalFence", Conveyor.Direction.North);
+            BaseGameGrid.FillTilePrefab(xRightBoundary, i, 1, 1, ItemGenerator.SingleVerticalFencePath, "SingleVerticalFence", Conveyor.Direction.North);
+        }
+
+        // Spawn corners
+
+        BaseGameGrid.FillTilePrefab(xLeftBoundary, yTopBoundary, 1, 1, ItemGenerator.SingleTopLeftFencePath, "SingleTopLeftEndFence", Conveyor.Direction.North);
+        BaseGameGrid.FillTilePrefab(xRightBoundary, yTopBoundary, 1, 1, ItemGenerator.SingleTopRightFencePath, "SingleTopRightEndFence", Conveyor.Direction.North);
+        BaseGameGrid.FillTilePrefab(xLeftBoundary, yBotBoundary, 1, 1, ItemGenerator.SingleBotLeftFencePath, "SingleBotLeftEndFence", Conveyor.Direction.North);
+        BaseGameGrid.FillTilePrefab(xRightBoundary, yBotBoundary, 1, 1, ItemGenerator.SingleBotRightFencePath, "SingleBotRightEndFence", Conveyor.Direction.North);
+
+        if (spawnCustomerArea) SpawnCustomerArea(customerAreaSize, xLeftBoundary, xRightBoundary, yTopBoundary);
+    }
+
+    /** Spaws the customer area. */
+    private void SpawnCustomerArea(int height, int xLeftBoundary, int xRightBoundary, int yTopBoundary)
+    {
+        //Spawn wood floor area
+        for(int i = yTopBoundary - 1; i > yTopBoundary - 1 - height; i--)
+        {
+            for(int z = xLeftBoundary + 1; z < xRightBoundary; z++)
+            {
+                BaseGameGrid.CreateTile(z, i, woodFloor);
+            }
+        }
+
+        //Spawn fence at bottom of wood area
+
+
+
+
+
+
     }
 }

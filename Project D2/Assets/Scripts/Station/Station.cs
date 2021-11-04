@@ -37,9 +37,16 @@ public class Station : FluidItem, IAnimator
     public const int NUM_MOVEMENT_TICKS = 6;
 
     /**Accepts an item dragged onto this station from the Inventory.*/
-    public override void TakeDraggedItem(ItemScriptable item)
+    public override bool TakeDraggedItem(ItemScriptable item)
     {
-        return;
+        if (!CanDragTo(item)) return false;
+        else Debug.Log(NAME + " accepted " + item.itemClassName);
+        return true;
+    }
+
+    public override void ReleaseDraggedItem()
+    {
+        throw new NotImplementedException();
     }
 
     /**Get the scriptable object of this station. Set up animations and holders.*/
@@ -76,9 +83,9 @@ public class Station : FluidItem, IAnimator
         TargetPosition = GetTargetDestination();
     }
 
-    public virtual void MoveToHolder(GameObject item)
+    public virtual bool MoveToHolder(GameObject item)
     {
-        return;
+        return true;
     }
 
 
@@ -167,7 +174,7 @@ public class Station : FluidItem, IAnimator
 
     public void StopAnimation(Coroutine animationToStop)
     {
-        throw new NotImplementedException();
+        this.StopCoroutine(animationToStop);
     }
 
 }

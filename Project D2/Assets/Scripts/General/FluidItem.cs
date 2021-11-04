@@ -29,8 +29,9 @@ public abstract class FluidItem : Item, IMover
 
 
     /**Return true if itemBeingDragged can be dragged to this FluidItem; false otherwise. */
-    public bool CanDragTo(ItemScriptable itemBeingDragged)
+    public virtual bool CanDragTo(ItemScriptable itemBeingDragged)
     {
+        if (itemBeingDragged == null || ItemsCanTakeByDragging.Length == 0) return false;
         if(ItemsCanTakeByDragging[0] == "All" || Array.IndexOf(ItemsCanTakeByDragging, itemBeingDragged.itemClassName) > -1){
             return true;
         }
@@ -38,8 +39,9 @@ public abstract class FluidItem : Item, IMover
     }
 
     /**Return true if itemBeingDragged can be moved to this FluidItem; false otherwise. */
-    public bool CanMoveTo(ItemScriptable itemBeingMoved)
+    public virtual bool CanMoveTo(ItemScriptable itemBeingMoved)
     {
+        if (itemBeingMoved == null || ItemsCanTakeByDragging.Length == 0) return false;
         if (ItemsCanTakeByMovement[0] == "All" || Array.IndexOf(ItemsCanTakeByMovement, itemBeingMoved.itemClassName) > -1)
         {
             return true;
@@ -56,7 +58,6 @@ public abstract class FluidItem : Item, IMover
     public abstract void CashMovedItemIn(GameObject item);
 
     public abstract void DestroyMovedItem(GameObject item);
-
 
 
     /**Gives an item it holds to another IMover.*/
@@ -100,5 +101,19 @@ public abstract class FluidItem : Item, IMover
 
     public abstract void TakeMovedItem(GameObject item);
 
-    public abstract void TakeDraggedItem(ItemScriptable item);
+    public abstract bool TakeDraggedItem(ItemScriptable item);
+
+    public abstract void ReleaseDraggedItem();
+
+    /**Changes this FluidItem's SpriteRenderer color to (110,255,105,255). */
+    public virtual void ColorTileAsDragAvailable()
+    {
+        GameTileIn.objectHoldingSpriteRenderer.color = new Color32(110, 255, 105, 255);
+    }
+
+    /**Changes this FluidItem's SpriteRenderer color to (255,255,255,255). */
+    public virtual void ColorTileAsDefault()
+    {
+        GameTileIn.objectHoldingSpriteRenderer.color = new Color32(255, 255, 255, 255);
+    }
 }
