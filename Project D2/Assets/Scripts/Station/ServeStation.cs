@@ -16,7 +16,7 @@ public class ServeStation : Station
         "Broccoli" };
 
     /**The time it takes this station to process an item by movement. */
-    public override float TimeToProcess { get; } = 3.5f;
+    public override float TimeToHold { get; set; } = 3.5f;
 
     /**This ServeStation's left StationHolder. */
     public StationHolder leftHolder;
@@ -39,28 +39,38 @@ public class ServeStation : Station
     /**The Sprite for this ServeStation's StationHolder's vacant state. */
     public Sprite holderLightVacantSprite;
 
-    /**A FIFO list of this ServeStation's StationHolders. */
-    public List<StationHolder> HolderQueue { get; private set; }
+    /**The Coroutine for playing the steamer animation. */
+    public Coroutine LeftHolderSteamAnimation { get; private set; }
+
+    /**The Coroutine for playing the steamer animation. */
+    public Coroutine RightHolderSteamAnimation { get; private set; }
+
+    /**The animation track for the holder steam animation.  */
+    public Sprite[] HolderSteamAnimationTrack;
+
+    /**A FIFO list of this Station's StationHolders. */
+    public List<StationHolder> ServeHolderQueue { get; protected set; }
+
 
     protected override void Start()
     {
         base.Start();
-        HolderQueue = new List<StationHolder>();
+        ServeHolderQueue = new List<StationHolder>();
         Holders = new StationHolder[2];
-        Holders[0] = leftHolder;
-        Holders[1] = rightHolder;
-        foreach (StationHolder holder in Holders)
-        {
-            holder.HolderAnimation = PlayAnimation(HolderAnimationTrack, .2f, holder.HolderSpriteRenderer);
-            holder.ItemsCanTakeByDragging = ItemsCanTakeByDragging;
-            holder.ItemsCanTakeByMovement = ItemsCanTakeByMovement;
-        }
-        leftHolderLight.sprite = holderLightVacantSprite;
-        rightHolderLight.sprite = holderLightVacantSprite;
-    }
 
-    void Update()
-    {
+        LeftHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, leftHolder.HolderSpriteRenderer);
+        leftHolder.ItemsCanTakeByDragging = ItemsCanTakeByDragging;
+        leftHolder.ItemsCanTakeByMovement = ItemsCanTakeByMovement;
+        leftHolderLight.sprite = holderLightVacantSprite;
+        Holders[0] = leftHolder;
+
+        RightHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, rightHolder.HolderSpriteRenderer);
+        rightHolder.ItemsCanTakeByDragging = ItemsCanTakeByDragging;
+        rightHolder.ItemsCanTakeByMovement = ItemsCanTakeByMovement;
+        rightHolderLight.sprite = holderLightVacantSprite;
+        Holders[1] = rightHolder;
+
+        RightHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, rightHolder.HolderSpriteRenderer);
 
     }
 
@@ -75,27 +85,25 @@ public class ServeStation : Station
         StartCoroutine(HoldItemCoro(item));
     }
 
+    
     public override bool MoveToHolder(GameObject item)
     {
         if (leftHolder.transform.position == GetTargetDestination())
         {
             leftHolder.HoldItem(item);
-            HolderQueue.Add(leftHolder);
+            ServeHolderQueue.Add(leftHolder);
             return true;
         }
         else if (rightHolder.transform.position == GetTargetDestination())
         {
             rightHolder.HoldItem(item);
-            HolderQueue.Add(rightHolder);
+            ServeHolderQueue.Add(rightHolder);
             return true;
         }
         else return false;
     }
 
-    public override void ProcessMovedItem(GameObject item)
-    {
-        base.ProcessMovedItem(item);
-    }
+    
 
     public override bool TakeDraggedItem(ItemScriptable item)
     {
@@ -117,9 +125,9 @@ public class ServeStation : Station
 
     IEnumerator HoldItemCoro(GameObject item)
     {
-        yield return new WaitForSeconds(TimeToProcess);
-        HolderQueue[0].ReleaseHeldItem();
-        HolderQueue.RemoveAt(0);
+        yield return new WaitForSeconds(TimeToHold);
+        ServeHolderQueue[0].ReleaseHeldItem();
+        ServeHolderQueue.RemoveAt(0);
         ProcessMovedItem(item);
     }
 

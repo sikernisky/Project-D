@@ -14,24 +14,16 @@ public class Station : FluidItem, IAnimator
      *  If no item can be dragged to this item, it contains no elements or is null. */
     public override string[] ItemsCanTakeByDragging { get; } = { "All" };
 
-
     /** All items that can be moved onto/into this Item from an IMover.
      *  If any item can be moved to this item, it contains one element "All"
      *  If no item can be moved to this item, it contains no elements or is null. */
     public override string[] ItemsCanTakeByMovement { get; } = { "All" };
 
-
-    /**A list of this Station's Holders. Null if it has none. */
-    public StationHolder[] Holders { get; protected set; }
-
-    /**An array of sprites, in order, that form this Station's Holder animation. */
-    public Sprite[] HolderAnimationTrack { get; protected set; }
-
-    /**This Station's StationScriptable counterpart.*/
-    public StationScriptable Scriptable { get; protected set; }
-
     /** The amount of time, in seconds, it takes to hold an item. */
-    public virtual float TimeToProcess { get; }
+    public virtual float TimeToHold { get; set; }
+
+    /** An array of ALL StationHolders for this Station. */
+    public virtual StationHolder[] Holders { get; protected set; }
 
     /**The number of times a GameObject on this Station moves closer to its target.*/
     public const int NUM_MOVEMENT_TICKS = 6;
@@ -53,14 +45,6 @@ public class Station : FluidItem, IAnimator
     protected override void Start()
     {
         base.Start();
-        Scriptable = (StationScriptable)ItemGenerator.GetScriptableObject(NAME);
-        SetUpAnimationTracks();
-        SetUpHolders();
-    }
-
-    /**Sets up all necessary holders for this station. */
-    public virtual void SetUpHolders()
-    {
     }
 
     /**Claims an item and performs any necessary actions before HoldMovedItem() is called.*/
@@ -133,7 +117,23 @@ public class Station : FluidItem, IAnimator
     }
 
 
+    protected virtual void HideHeldItem(GameObject item)
+    {
+        item.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 0);
+        foreach (Transform itemChild in item.transform)
+        {
+            if (itemChild.GetComponent<SpriteRenderer>() != null) itemChild.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 0);
+        }
+    }
 
+    protected virtual void ShowHeldItem(GameObject item)
+    {
+        item.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        foreach (Transform itemChild in item.transform)
+        {
+            if (itemChild.GetComponent<SpriteRenderer>() != null) itemChild.GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        }
+    }
 
 
 
@@ -145,13 +145,7 @@ public class Station : FluidItem, IAnimator
 
     public virtual Coroutine PlayAnimation(Sprite[] animationTrackToPlay, float secondsBetween, SpriteRenderer rendererToAnimate)
     {
-        Coroutine coroToReturn = null;
-
-        if (animationTrackToPlay == HolderAnimationTrack)
-        {
-            coroToReturn = StartCoroutine(PlayAnimationCoro(animationTrackToPlay, secondsBetween, rendererToAnimate));
-        }
-        return coroToReturn;
+        return StartCoroutine(PlayAnimationCoro(animationTrackToPlay, secondsBetween, rendererToAnimate));
     }
 
     IEnumerator PlayAnimationCoro(Sprite[] animationTrackToPlay, float secondsBetween, SpriteRenderer rendererToAnimate)
@@ -166,15 +160,15 @@ public class Station : FluidItem, IAnimator
         }
     }
 
-    /**Sets up any necessary animation tracks for this station. */
-    public virtual void SetUpAnimationTracks()
-    {
-        HolderAnimationTrack = Scriptable.holderReadyAnimationTrack;
-    }
 
     public void StopAnimation(Coroutine animationToStop)
     {
         this.StopCoroutine(animationToStop);
+    }
+
+    public virtual void PutHeldItemOnPlate(Plate plateToPutOn)
+    {
+
     }
 
 }

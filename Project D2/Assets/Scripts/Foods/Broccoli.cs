@@ -10,6 +10,7 @@ public class Broccoli : Food
 
     public override PathType PATH_TYPE { get; } = PathType.Veggie;
 
+    public override bool Roasted { get; set; }
     private void Start()
     {
     }

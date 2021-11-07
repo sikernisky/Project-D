@@ -125,7 +125,7 @@ public class GameGridMaster : MonoBehaviour
                 MoveablesGameGrid.FillTilePrefab(4, 4, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 5, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 6, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
-                MoveablesGameGrid.FillTilePrefab(3, 7, 3, 2, ItemGenerator.ServeStationPath, "ServeStation", north, 4, 8);
+                MoveablesGameGrid.FillTilePrefab(3, 7, 3, 2, ItemGenerator.RoastStationPath, "RoastStation", north, 4, 8);
                 MoveablesGameGrid.FillTilePrefab(4, 8, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 9, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 10, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
@@ -135,6 +135,9 @@ public class GameGridMaster : MonoBehaviour
                 MoveablesGameGrid.FillTilePrefab(4, 14, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 15, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 16, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+
+                MoveablesGameGrid.FillTilePrefab(10, 10, 3, 2, ItemGenerator.RoastStationPath, "RoastStation", north);
+
 
 
 

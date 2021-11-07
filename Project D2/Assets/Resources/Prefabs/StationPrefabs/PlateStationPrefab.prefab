@@ -189,6 +189,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6319940870552972361}
     m_Modifications:
+    - target: {fileID: 2747906527241991406, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3275450383789088882, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -233,9 +237,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069463784347189274, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5288006472414607639, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
       propertyPath: m_Name
       value: PlatePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6207234503745297950, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616536850039807152, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125397441765144943, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8660959298298418745, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8734573556348341486, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4b4feba054523049ad5ce953194e8e1, type: 3}

@@ -74,6 +74,7 @@ public class Conveyor : FluidItem, IAnimator
 
     IEnumerator MoveItemCoro(GameObject item, Vector3 targetDestination)
     {
+        //If the targetDestination is at a Station
         if(GameTileIn.NextGameTile.objectHolding.GetComponent<Station>() != null)
         {
             Station next = GameTileIn.NextGameTile.objectHolding.GetComponent<Station>();
@@ -160,7 +161,7 @@ public class Conveyor : FluidItem, IAnimator
         }
     }
 
-    /**Stops an existing Coroutine.*/
+    /**Stops a running Coroutine.*/
     public void StopAnimation(Coroutine animationToStop)
     {
         StopCoroutine(animationToStop);

@@ -188,6 +188,13 @@ MonoBehaviour:
   closedHolderSprite: {fileID: -541203700849076022, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
   holderLightOccupiedSprite: {fileID: 21300000, guid: 003fbadd6c9035642b31255e30a9d691, type: 3}
   holderLightVacantSprite: {fileID: 21300000, guid: 7fd7bc1a54e58cd4da597027e1b01751, type: 3}
+  HolderSteamAnimationTrack:
+  - {fileID: 1101513336177976955, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: 554173592516527194, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: 5890664973158925437, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: -6783115117288085911, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: -3912322084797042891, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
+  - {fileID: -4636559462193146929, guid: 1dba55046cbd5b74f9c5f8107ad2a62a, type: 3}
 --- !u!1 &3208794253144317744
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,14 +20,7 @@ public class PlateStation : Station
         "All" };
 
     /**The time it takes to process an Item. */
-    public override float TimeToProcess { get; } = 1.0f;
-
-    /**Set up ONE holder.*/
-    public override void SetUpHolders()
-    {
-
-
-    }
+    public override float TimeToHold { get; set; } = 0.0f;
 
     public void SpawnPlate()
     {

@@ -19,3 +19,5 @@ MonoBehaviour:
   basePlacedSprite: {fileID: 0}
   placeSound: {fileID: 0}
   plateSprite: {fileID: 599915304803301777, guid: 871d8fbd0725bd248996a38d6d087532, type: 3}
+  roastStationSprite: {fileID: 21300000, guid: 9c2f3dd47f9f81846a782a3c6b7d14fe, type: 3}
+  roastPlateSprite: {fileID: 21300000, guid: e1400c56166eb724e917dae74c56a97e, type: 3}

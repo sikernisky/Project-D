@@ -14,6 +14,9 @@ public abstract class Food : Item
     /**Base reward of this food.*/
     public virtual int BASE_REWARD { get; } = 0;
 
+    /**True if this food has been Roasted; false otherwise. */
+    public virtual bool Roasted { get; set; }
+
     /**Name of this food.*/
     public override string NAME { get; } = "Food";
 

@@ -1258,6 +1258,7 @@ MonoBehaviour:
   - {fileID: 4649709173367252304, guid: c8ee1133119b7fd4fb92bae32e66b496, type: 3}
   - {fileID: -6272188282642272357, guid: c8ee1133119b7fd4fb92bae32e66b496, type: 3}
   - {fileID: 4930281995492453304, guid: c8ee1133119b7fd4fb92bae32e66b496, type: 3}
+  woodFloor: {fileID: 21300000, guid: 30e5f444a056f7147a60327666d1a828, type: 3}
 --- !u!4 &967609084
 Transform:
   m_ObjectHideFlags: 0
@@ -2072,7 +2073,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 12
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2116,7 +2117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minCamSize: 2
-  maxCamSize: 10
+  maxCamSize: 12
   zoomPerTick: 1
 --- !u!1 &1586780619
 GameObject:

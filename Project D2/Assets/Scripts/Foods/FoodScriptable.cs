@@ -6,4 +6,8 @@ using UnityEngine;
 public class FoodScriptable: ItemScriptable
 {
     public Sprite plateSprite;
+
+    public Sprite roastStationSprite;
+
+    public Sprite roastPlateSprite;
 }

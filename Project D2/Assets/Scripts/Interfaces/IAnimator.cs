@@ -10,6 +10,4 @@ public interface IAnimator
 
     //void PlayNextSpriteInAnimation();
 
-    void SetUpAnimationTracks();
-
 }

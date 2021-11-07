@@ -15,9 +15,6 @@ public class StationHolder : MonoBehaviour
     /**This StationHolder's station. */
     public Station ParentStation;
 
-    /**This StationHolder's main animation. */
-    public Coroutine HolderAnimation;
-
     /**The SpriteRenderer of this StationHolder. */
     public SpriteRenderer HolderSpriteRenderer;
 

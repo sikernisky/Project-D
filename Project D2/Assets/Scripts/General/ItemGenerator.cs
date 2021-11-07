@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemGenerator
+public static class ItemGenerator
 {
     public static string DefaultConveyorPath { get; } = "Prefabs/ConveyorPrefabs/DefaultConveyorPrefab";
     public static string DeluxeConveyorPath { get; } = "Prefabs/ConveyorPrefabs/DeluxeConveyorPrefab";
+
     public static string PlateStationPath { get; } = "Prefabs/StationPrefabs/PlateStationPrefab";
     public static string ServeStationPath { get; } = "Prefabs/StationPrefabs/ServeStationPrefab";
+    public static string RoastStationPath { get; } = "Prefabs/StationPrefabs/RoastStationPrefab";
 
     public static string SingleHorizontalFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleHorizontalFencePrefab";
     public static string SingleVerticalFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleVerticalFencePrefab";

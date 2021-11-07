@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,8 +30,19 @@ public class Plate : MonoBehaviour
             gameObject.AddComponent(ItemGenerator.GetClassFromString(foodToAdd.itemClassName));
             GetNextOpenSlot().AddFoodSpriteToSlot(foodToAdd.plateSprite, foodToAdd.itemClassName);
         }
- 
-        
+    }
+
+    /**Adds a Food to this plate. Precondition: foodToAdd must correspond to a Food class. */
+    public void AddFoodToPlate(FoodScriptable foodToAdd, Sprite foodSprite)
+    {
+        if (GetNextOpenSlot() == null)
+        {
+            Debug.Log("No available slots on this plate.");
+        }
+        else
+        {
+            GetNextOpenSlot().AddFoodSpriteToSlot(foodSprite, foodToAdd.itemClassName);
+        }
     }
 
     private PlateSlot GetNextOpenSlot()
