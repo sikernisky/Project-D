@@ -11,7 +11,31 @@ public class GameGridMaster : MonoBehaviour
     public Sprite[] baseTileArray;
 
     /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
-    public Sprite woodFloor;
+    public Sprite woodFloorCenter;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorBot;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorTop;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorLeft;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorRight;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorTopLeft;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorTopRight;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorBotLeft;
+
+    /** The wooden floor Sprite of the customer area. Assigned in the inspector. */
+    public Sprite woodFloorBotRight;
 
     /**The Base Game Grid that we operate on.*/
     public static GameGrid BaseGameGrid { get; private set; }
@@ -209,12 +233,62 @@ public class GameGridMaster : MonoBehaviour
         {
             for(int z = xLeftBoundary + 1; z < xRightBoundary; z++)
             {
-                BaseGameGrid.CreateTile(z, i, woodFloor);
+                if(i == yTopBoundary - 1 && z == xRightBoundary -1)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorTopRight);
+                }
+                //BaseGameGrid.GetTileFromGrid(new Vector2(z, i)).objectHoldingSpriteRenderer.color = new Color32(112, 112, 141, 255);
+                else if (i == yTopBoundary - height && z == xRightBoundary -1)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorBotRight);
+
+                }
+                else if(i == yTopBoundary -1 &&  z == xLeftBoundary + 1)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorTopLeft);
+
+
+                }
+
+                else if (i == yTopBoundary - height && z == xLeftBoundary + 1)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorBotLeft);
+                }
+
+                else if(i == yTopBoundary - height)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorBot);
+                }
+                else if(i == yTopBoundary - 1)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorTop);
+                }
+
+                else if(z == xRightBoundary - 1)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorRight);
+
+                }
+
+                else if(z == xLeftBoundary + 1)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorLeft);
+
+                }
+
+                else
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorCenter);
+                }
+
             }
         }
 
         //Spawn fence at bottom of wood area
-
+        for(int i = xLeftBoundary + 1; i < xRightBoundary; i++)
+        {
+            BaseGameGrid.FillTilePrefab(i, yTopBoundary - height - 1, 1, 1, ItemGenerator.SingleHorizontalFencePath, "SingleHorizontalFence", Conveyor.Direction.North);
+        }
 
 
 
