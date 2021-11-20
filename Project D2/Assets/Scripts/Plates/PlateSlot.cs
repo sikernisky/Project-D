@@ -6,9 +6,11 @@ public class PlateSlot : MonoBehaviour
 {
     public int SlotNumber { get; set; }
 
-    public string FoodHoldingName { get; private set; }
+    public Food FoodHolding { get; private set; }
 
     private SpriteRenderer plateSlotSpriteRenderer;
+
+    public Plate ParentPlate { get; set; }
 
     private void Start()
     {
@@ -21,11 +23,12 @@ public class PlateSlot : MonoBehaviour
         return false;
     }
 
-    public void AddFoodSpriteToSlot(Sprite foodSprite, string foodName)
+    /** Adds a Food to this slot. Precondition: foodName must correspond to a Food. */
+    public void AddFoodToSlot(Sprite foodSprite, Food food)
     {
         plateSlotSpriteRenderer.sprite = foodSprite;
-        FoodHoldingName = foodName;
-
+        ParentPlate.PlateValue += food.CalculateReward();
+        FoodHolding = food;
     }
 
     

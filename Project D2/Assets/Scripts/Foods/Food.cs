@@ -25,4 +25,13 @@ public abstract class Food : Item
 
     /**Performs this Food's main ability.*/
     public abstract void PerformAbility(Plate plate);
+
+    /**The plate this Food is on. */
+    public Plate PlateOn { get; set; }
+
+    /**Returns the reward of this Food based on game conditions. */
+    public virtual int CalculateReward()
+    {
+        return BASE_REWARD;
+    }
 }

@@ -11,6 +11,7 @@ public class Broccoli : Food
     public override PathType PATH_TYPE { get; } = PathType.Veggie;
 
     public override bool Roasted { get; set; }
+
     private void Start()
     {
     }
@@ -18,6 +19,12 @@ public class Broccoli : Food
     public override bool AbilityConditionMet()
     {
         return false;
+    }
+
+    public override int CalculateReward()
+    {
+        if (Roasted) return BASE_REWARD * 2;
+        else return base.CalculateReward();
     }
 
     public override void PerformAbility(Plate plate)

@@ -38,9 +38,10 @@ public class PlateStation : Station
     public override bool TakeDraggedItem(ItemScriptable item)
     {
         FoodScriptable itemFood = item as FoodScriptable;
+        Food foodToAdd = (Food)ItemGenerator.GetItemFromString(itemFood.itemClassName);
         if(itemFood != null)
         {
-            plateHolding.GetComponent<Plate>().AddFoodToPlate(itemFood);
+            plateHolding.GetComponent<Plate>().AddFoodToPlate(foodToAdd, itemFood.plateSprite);
             HoldMovedItem(plateHolding);
             SpawnPlate();
             return true;

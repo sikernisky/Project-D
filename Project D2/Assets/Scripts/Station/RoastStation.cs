@@ -194,7 +194,10 @@ public class RoastStation : Station
 
         if (leftBurnerHolder.Queued)
         {
-            plateToPutOn.AddFoodToPlate((FoodScriptable)leftBurnerHolder.ItemQueuedScriptable, ((FoodScriptable)leftBurnerHolder.ItemQueuedScriptable).roastPlateSprite);
+            Food foodToAdd = (Food)ItemGenerator.GetItemFromString(leftBurnerHolder.ItemQueuedScriptable.itemClassName);
+            foodToAdd.Roasted = true;
+
+            plateToPutOn.AddFoodToPlate(foodToAdd, ((FoodScriptable)leftBurnerHolder.ItemQueuedScriptable).roastPlateSprite);
             if(plateToPutOn.gameObject.GetComponent(ItemGenerator.GetClassFromString(leftBurnerHolder.ItemQueuedScriptable.itemClassName)) != null)
             {
                 plateToPutOn.gameObject.GetComponent<Food>().Roasted = true;
@@ -217,7 +220,10 @@ public class RoastStation : Station
         }
         else if (rightBurnerHolder.Queued)
         {
-            plateToPutOn.AddFoodToPlate((FoodScriptable)rightBurnerHolder.ItemQueuedScriptable, ((FoodScriptable)rightBurnerHolder.ItemQueuedScriptable).roastPlateSprite);
+            Food foodToAdd = (Food)ItemGenerator.GetItemFromString(rightBurnerHolder.ItemQueuedScriptable.itemClassName);
+            foodToAdd.Roasted = true;
+
+            plateToPutOn.AddFoodToPlate(foodToAdd, ((FoodScriptable)rightBurnerHolder.ItemQueuedScriptable).roastPlateSprite);
             if (plateToPutOn.gameObject.GetComponent(ItemGenerator.GetClassFromString(rightBurnerHolder.ItemQueuedScriptable.itemClassName)) != null)
             {
                 plateToPutOn.gameObject.GetComponent<Food>().Roasted = true;

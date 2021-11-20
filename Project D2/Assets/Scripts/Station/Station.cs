@@ -113,6 +113,10 @@ public class Station : FluidItem, IAnimator
     /**Destroys an item held in one of this Station's Holders.*/
     public override void DestroyMovedItem(GameObject item)
     {
+        if (item.GetComponent<Plate>() != null)
+        {
+            LevelData.levelEmBalance += item.GetComponent<Plate>().PlateValue;
+        }
         Destroy(item);
     }
 

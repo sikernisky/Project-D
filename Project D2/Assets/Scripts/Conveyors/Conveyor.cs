@@ -49,6 +49,10 @@ public class Conveyor : FluidItem, IAnimator
     /**Destroys an item on this conveyor.*/
     public override void DestroyMovedItem(GameObject item)
     {
+        if (item.GetComponent<Plate>() != null)
+        {
+            LevelData.levelEmBalance += item.GetComponent<Plate>().PlateValue;
+        }
         Destroy(item);
     }
 
