@@ -13,19 +13,10 @@ public class ServeStation : Station
 
     /**The string list of items that this ServeStation can take by dragging. */
     public override string[] ItemsCanTakeByDragging { get; } = {
-        "Broccoli" };
-
-    /**The time it takes this station to process an item by movement. */
-    public override float TimeToHold { get; set; } = 3.5f;
+         };
 
     /**This ServeStation's left StationHolder. */
     public StationHolder leftHolder;
-
-    /**The SpriteRenderer for the left holder's light. */
-    public SpriteRenderer leftHolderLight;
-
-    /**The SpriteRenderer for the right holder's light. */
-    public SpriteRenderer rightHolderLight;
 
     /**This ServeStation's right StationHolder. */
     public StationHolder rightHolder;
@@ -61,17 +52,37 @@ public class ServeStation : Station
         LeftHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, leftHolder.HolderSpriteRenderer);
         leftHolder.ItemsCanTakeByDragging = ItemsCanTakeByDragging;
         leftHolder.ItemsCanTakeByMovement = ItemsCanTakeByMovement;
-        leftHolderLight.sprite = holderLightVacantSprite;
         Holders[0] = leftHolder;
 
         RightHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, rightHolder.HolderSpriteRenderer);
         rightHolder.ItemsCanTakeByDragging = ItemsCanTakeByDragging;
         rightHolder.ItemsCanTakeByMovement = ItemsCanTakeByMovement;
-        rightHolderLight.sprite = holderLightVacantSprite;
         Holders[1] = rightHolder;
 
-        RightHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, rightHolder.HolderSpriteRenderer);
 
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            GivePlateToCustomer(leftHolder);
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GivePlateToCustomer(rightHolder);
+        }
+    }
+
+
+    public override void MoveItem(GameObject item)
+    {
+        return;
+    }
+
+    public override void MoveItem(GameObject item, Vector3 targetDestination)
+    {
+        return;
     }
 
     public override bool CanDragTo(ItemScriptable itemBeingDragged)
@@ -80,22 +91,28 @@ public class ServeStation : Station
         return base.CanDragTo(itemBeingDragged);
     }
 
-    public override void HoldMovedItem(GameObject item)
+
+    public override void TakeMovedItem(GameObject item)
     {
-        StartCoroutine(HoldItemCoro(item));
     }
 
-    
     public override bool MoveToHolder(GameObject item)
     {
+        Debug.Log("Called");
         if (leftHolder.transform.position == GetTargetDestination())
         {
+            StopCoroutine(LeftHolderSteamAnimation);
+            leftHolder.HolderSpriteRenderer.sprite = closedHolderSprite;
+            HideHeldItem(item);
             leftHolder.HoldItem(item);
             ServeHolderQueue.Add(leftHolder);
             return true;
         }
         else if (rightHolder.transform.position == GetTargetDestination())
         {
+            StopCoroutine(RightHolderSteamAnimation);
+            rightHolder.HolderSpriteRenderer.sprite = closedHolderSprite;
+            HideHeldItem(item);
             rightHolder.HoldItem(item);
             ServeHolderQueue.Add(rightHolder);
             return true;
@@ -107,29 +124,42 @@ public class ServeStation : Station
 
     public override bool TakeDraggedItem(ItemScriptable item)
     {
-        base.TakeDraggedItem(item);
+        /*base.TakeDraggedItem(item);
         if (!leftHolder.Queued)
         {
+            StopCoroutine(LeftHolderSteamAnimation);
+            leftHolder.HolderSpriteRenderer.sprite = closedHolderSprite;
             leftHolder.QueueItem(item);
-            leftHolderLight.sprite = holderLightOccupiedSprite;
+            leftHolder.Occupied = true;
             return true;
         }
         else if (!rightHolder.Queued)
         {
+            StopCoroutine(RightHolderSteamAnimation);
+            rightHolder.HolderSpriteRenderer.sprite = closedHolderSprite;
             rightHolder.QueueItem(item);
-            rightHolderLight.sprite = holderLightOccupiedSprite;
+            rightHolder.Occupied = true;
             return true;
-        }
+        } */
+
         return false;
     }
 
-    IEnumerator HoldItemCoro(GameObject item)
+    public void GivePlateToCustomer(StationHolder stationHolder)
     {
-        yield return new WaitForSeconds(TimeToHold);
-        ServeHolderQueue[0].ReleaseHeldItem();
-        ServeHolderQueue.RemoveAt(0);
-        ProcessMovedItem(item);
+        if (stationHolder == leftHolder) {
+            DestroyMovedItem(leftHolder.ItemHolding);
+            leftHolder.ReleaseHeldItem();
+            LeftHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, leftHolder.HolderSpriteRenderer);
+        }
+        else if (stationHolder == rightHolder) {
+            DestroyMovedItem(rightHolder.ItemHolding);
+            rightHolder.ReleaseHeldItem();
+            RightHolderSteamAnimation = PlayAnimation(HolderSteamAnimationTrack, .2f, rightHolder.HolderSpriteRenderer);
+        }
     }
+
+
 
     public override Vector3 GetTargetDestination()
     {

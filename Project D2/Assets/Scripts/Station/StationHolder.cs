@@ -37,7 +37,7 @@ public class StationHolder : MonoBehaviour
     public Item ItemQueued { get; private set; }
 
     /**The GameObject this StationHolder is holding. */
-    public GameObject ItemHolding { get; private set; }
+    public GameObject ItemHolding { get; set; }
 
     /** All items that can be dragged and dropped onto/into this Item. */
     public string[] ItemsCanTakeByDragging { get; set; }
@@ -62,6 +62,7 @@ public class StationHolder : MonoBehaviour
         if (newHolderSprite != null) HolderSpriteRenderer.sprite = newHolderSprite;
 
     }
+
 
     public void ReleaseHeldItem()
     {

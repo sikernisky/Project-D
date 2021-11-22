@@ -77,7 +77,7 @@ public class Station : FluidItem, IAnimator
     public override void MoveItem(GameObject item)
     {
         if (!CanContinue(this)) DestroyMovedItem(item);
-        StartCoroutine(MoveItemCoro(item, GameTileIn.NextGameTile.objectHolding.transform.position));
+        else StartCoroutine(MoveItemCoro(item, GameTileIn.NextGameTile.objectHolding.transform.position));
     }
 
     /**Moves this item from a Holder to targetDestination.*/
@@ -109,17 +109,6 @@ public class Station : FluidItem, IAnimator
         if (GameTileIn.NextGameTile.objectHolding == null) DestroyMovedItem(item);
         else GiveMovedItem(item, GameTileIn.NextGameTile.objectHolding.GetComponent<FluidItem>());
     }
-
-    /**Destroys an item held in one of this Station's Holders.*/
-    public override void DestroyMovedItem(GameObject item)
-    {
-        if (item.GetComponent<Plate>() != null)
-        {
-            LevelData.levelEmBalance += item.GetComponent<Plate>().PlateValue;
-        }
-        Destroy(item);
-    }
-
 
     protected virtual void HideHeldItem(GameObject item)
     {

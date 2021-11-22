@@ -83,9 +83,6 @@ public class Plate : MonoBehaviour
             }
         }
     }
-    
-
-    
 
     public override string ToString()
     {

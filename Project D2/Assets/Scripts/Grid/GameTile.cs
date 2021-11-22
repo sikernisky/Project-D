@@ -37,6 +37,9 @@ public class GameTile
     /**True if something is on this tile, even if it doesn't have an objectHolding.*/
     public bool Occupied { get; private set; }
 
+    /**True if a customer can walk on this tile; false otherwise. */
+    public bool Walkable { get; set; }
+
     /**Name of the thing occupying this GameTile. */
     public string GameTileName { get; private set; }
 
@@ -61,6 +64,8 @@ public class GameTile
         WorldY = worldY;
 
         GridIn = grid;
+
+        Walkable = false;
     }
 
     /**Fills this tile with a GameObject and returns the GameObject. 

@@ -46,18 +46,6 @@ public class Conveyor : FluidItem, IAnimator
      *  If no item can be moved to this item, it contains no elements or is null. */
     public override string[] ItemsCanTakeByMovement { get; } = { "All" };
 
-    /**Destroys an item on this conveyor.*/
-    public override void DestroyMovedItem(GameObject item)
-    {
-        if (item.GetComponent<Plate>() != null)
-        {
-            LevelData.levelEmBalance += item.GetComponent<Plate>().PlateValue;
-        }
-        Destroy(item);
-    }
-
-
-
     /**Moves item to its next tile's TargetPosition.*/
     public override void MoveItem(GameObject item)
     {
@@ -78,16 +66,7 @@ public class Conveyor : FluidItem, IAnimator
 
     IEnumerator MoveItemCoro(GameObject item, Vector3 targetDestination)
     {
-        //If the targetDestination is at a Station
-        if(GameTileIn.NextGameTile.objectHolding.GetComponent<Station>() != null)
-        {
-            Station next = GameTileIn.NextGameTile.objectHolding.GetComponent<Station>();
-            if (!next.MoveToHolder(item))
-            {
-                DestroyMovedItem(item);
-                yield break;
-            }
-        }
+
 
         Vector3 distanceToTravel = targetDestination - item.transform.position;
         Vector3 distancePerTick = distanceToTravel / NUM_MOVEMENT_TICKS;
@@ -97,6 +76,17 @@ public class Conveyor : FluidItem, IAnimator
         {
             item.transform.position += distancePerTick;
             yield return new WaitForSeconds(secondsBetweenTick);
+        }
+
+        //If the targetDestination is at a Station
+        if (GameTileIn.NextGameTile.objectHolding.GetComponent<Station>() != null)
+        {
+            Station next = GameTileIn.NextGameTile.objectHolding.GetComponent<Station>();
+            if (!next.MoveToHolder(item))
+            {
+                DestroyMovedItem(item);
+                yield break;
+            }
         }
 
         GiveMovedItem(item, GameTileIn.NextGameTile.objectHolding.GetComponent<FluidItem>());

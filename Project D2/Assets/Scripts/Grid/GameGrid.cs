@@ -75,6 +75,14 @@ public class GameGrid {
         }
     }
 
+    public void SetAllTilesWalkable()
+    {
+        foreach(GameTile tile in GridArray)
+        {
+            tile.Walkable = true;
+        }
+    }
+
     public void CreateTile(int xPos, int yPos, Sprite image)
     {
         GameTile tile = GetTileFromGrid(new Vector2(xPos, yPos));

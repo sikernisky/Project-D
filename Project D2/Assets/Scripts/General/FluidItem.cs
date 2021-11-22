@@ -57,7 +57,20 @@ public abstract class FluidItem : Item, IMover
 
     public abstract void CashMovedItemIn(GameObject item);
 
-    public abstract void DestroyMovedItem(GameObject item);
+    public virtual void DestroyMovedItem(GameObject item)
+    {
+        if (item.GetComponent<Plate>() != null)
+        {
+            if(GameTileIn.objectHolding != null)
+            {
+                if(GameTileIn.objectHolding.GetComponent<ServeStation>() != null)
+                {
+                    LevelData.levelEmBalance += item.GetComponent<Plate>().PlateValue;
+                }
+            }
+        }
+        Destroy(item);
+    }
 
 
     /**Gives an item it holds to another IMover.*/

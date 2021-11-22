@@ -159,6 +159,7 @@ public class GameGridMaster : MonoBehaviour
                 MoveablesGameGrid.FillTilePrefab(4, 14, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 15, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
                 MoveablesGameGrid.FillTilePrefab(4, 16, 1, 1, ItemGenerator.DefaultConveyorPath, "DefaultConveyor", north);
+                MoveablesGameGrid.FillTilePrefab(3, 17, 3, 2, ItemGenerator.ServeStationPath, "ServeStation", north);
 
                 MoveablesGameGrid.FillTilePrefab(10, 10, 3, 2, ItemGenerator.RoastStationPath, "RoastStation", north);
 
@@ -233,62 +234,77 @@ public class GameGridMaster : MonoBehaviour
         {
             for(int z = xLeftBoundary + 1; z < xRightBoundary; z++)
             {
-                if(i == yTopBoundary - 1 && z == xRightBoundary -1)
+                
+                if (i == yTopBoundary - height && z == xRightBoundary -1)
                 {
-                    BaseGameGrid.CreateTile(z, i, woodFloorTopRight);
-                }
-                //BaseGameGrid.GetTileFromGrid(new Vector2(z, i)).objectHoldingSpriteRenderer.color = new Color32(112, 112, 141, 255);
-                else if (i == yTopBoundary - height && z == xRightBoundary -1)
-                {
-                    BaseGameGrid.CreateTile(z, i, woodFloorBotRight);
+                    BaseGameGrid.CreateTile(z, i, woodFloorCenter);
 
                 }
-                else if(i == yTopBoundary -1 &&  z == xLeftBoundary + 1)
-                {
-                    BaseGameGrid.CreateTile(z, i, woodFloorTopLeft);
 
-
-                }
 
                 else if (i == yTopBoundary - height && z == xLeftBoundary + 1)
-                {
-                    BaseGameGrid.CreateTile(z, i, woodFloorBotLeft);
-                }
-
-                else if(i == yTopBoundary - height)
-                {
-                    BaseGameGrid.CreateTile(z, i, woodFloorBot);
-                }
-                else if(i == yTopBoundary - 1)
-                {
-                    BaseGameGrid.CreateTile(z, i, woodFloorTop);
-                }
-
-                else if(z == xRightBoundary - 1)
-                {
-                    BaseGameGrid.CreateTile(z, i, woodFloorRight);
-
-                }
-
-                else if(z == xLeftBoundary + 1)
-                {
-                    BaseGameGrid.CreateTile(z, i, woodFloorLeft);
-
-                }
-
-                else
                 {
                     BaseGameGrid.CreateTile(z, i, woodFloorCenter);
                 }
 
+                else if(i == yTopBoundary - height)
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorCenter);
+                }
+
+
+                else
+                {
+                    BaseGameGrid.CreateTile(z, i, woodFloorCenter);
+                    BaseGameGrid.GetTileFromGrid(new Vector2(z, i)).Walkable = true;
+                }
+
+
             }
         }
 
-        //Spawn fence at bottom of wood area
-        for(int i = xLeftBoundary + 1; i < xRightBoundary; i++)
+        for(int i = yTopBoundary - 1; i > yTopBoundary - height; i-= 3)
         {
-            BaseGameGrid.FillTilePrefab(i, yTopBoundary - height - 1, 1, 1, ItemGenerator.SingleHorizontalFencePath, "SingleHorizontalFence", Conveyor.Direction.North);
+            for(int z = xLeftBoundary + 1; z < xRightBoundary -1; z+= 5)
+            {
+                MoveablesGameGrid.FillTilePrefab(z, i, 3, 3, ItemGenerator.CustomerTablePath, "CustomerTable", Conveyor.Direction.North);
+
+            }
         }
+
+        //Repaint the fencing for the customer area.
+
+        //Bot horz
+        for (int i = xLeftBoundary + 1; i < xRightBoundary; i++)
+        {
+            BaseGameGrid.FillTilePrefab(i, yTopBoundary - height - 1, 1, 1, ItemGenerator.SingleBotHorizontalFenceWoodPath, "SingleTopHorizontalWoodFence", Conveyor.Direction.North);
+        }
+
+        //Top horz
+        for (int i = xLeftBoundary + 1; i < xRightBoundary; i++)
+        {
+            BaseGameGrid.FillTilePrefab(i, yTopBoundary, 1, 1, ItemGenerator.SingleTopHorizontalFenceWoodPath, "SingleBotHorizontalWoodFence", Conveyor.Direction.North);
+        }
+
+        //Left vert
+
+        for(int i = yTopBoundary; i >= yTopBoundary - height - 1; i--)
+        {
+            BaseGameGrid.FillTilePrefab(xLeftBoundary, i, 1, 1, ItemGenerator.SingleVerticalLeftFenceWoodPath, "SingleVerticalLeftWoodFence", Conveyor.Direction.North);
+        }
+
+        //Right vert
+        for (int i = yTopBoundary; i >= yTopBoundary - height - 1; i--)
+        {
+            BaseGameGrid.FillTilePrefab(xRightBoundary, i, 1, 1, ItemGenerator.SingleVerticalRightFenceWoodPath, "SingleVerticalRightWoodFence", Conveyor.Direction.North);
+        }
+
+        //Corners
+        BaseGameGrid.FillTilePrefab(xRightBoundary, yTopBoundary, 1, 1, ItemGenerator.SingleTopRightFenceWoodPath, "SingleTopRightWoodFence", Conveyor.Direction.North);
+        BaseGameGrid.FillTilePrefab(xRightBoundary, yTopBoundary - height - 1, 1, 1, ItemGenerator.SingleBotRightFenceWoodPath, "SingleBotRightWoodFence", Conveyor.Direction.North);
+        BaseGameGrid.FillTilePrefab(xLeftBoundary, yTopBoundary - height - 1, 1, 1, ItemGenerator.SingleBotLeftFenceWoodPath , "SingleBotLeftWoodFence", Conveyor.Direction.North);
+        BaseGameGrid.FillTilePrefab(xLeftBoundary, yTopBoundary, 1, 1, ItemGenerator.SingleTopLeftFenceWoodPath, "SingleTopLeftWoodFence", Conveyor.Direction.North);
+
 
 
 

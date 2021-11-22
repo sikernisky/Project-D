@@ -19,6 +19,17 @@ public static class ItemGenerator
     public static string SingleTopRightFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleTopRightEndFencePrefab";
     public static string SingleBotRightFencePath { get; } = "Prefabs/ObstaclePrefabs/SingleBotRightEndFencePrefab";
 
+    public static string SingleTopHorizontalFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleTopHorizontalFenceWoodPrefab";
+    public static string SingleBotHorizontalFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleBotHorizontalFenceWoodPrefab";
+    public static string SingleVerticalLeftFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleVerticalLeftFenceWoodPrefab";
+    public static string SingleVerticalRightFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleVerticalRightFenceWoodPrefab";
+    public static string SingleTopLeftFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleTopLeftFenceWoodPrefab";
+    public static string SingleBotLeftFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleBotLeftEndFenceWoodPrefab";
+    public static string SingleTopRightFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleTopRightFenceWoodPrefab";
+    public static string SingleBotRightFenceWoodPath { get; } = "Prefabs/ObstaclePrefabs/SingleBotRightEndFenceWoodPrefab";
+
+    public static string CustomerTablePath { get; } = "Prefabs/ObstaclePrefabs/CustomerTablePrefab";
+        
 
     /**Returns the ItemScriptable with the itemName. If not found, returns a default FoodScriptable. */
     public static ItemScriptable GetScriptableObject(string itemName)
