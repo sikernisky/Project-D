@@ -2,170 +2,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
-using TMPro;
 
-public class InventorySlot : MonoBehaviour, IDragHandler, IDropHandler
+/// <summary>
+/// This class represents a slot in the Inventory.
+/// </summary>
+public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    /**The Item this slot is holding. */
-    public ItemScriptable ItemHolding { get; set; }
+    /// <summary> The Item in this slot.</summary>
+    private Item slotItem;
 
-    /**The number of this slot, dictated by the Inventory class. */
-    public int SlotNumber { get; set; }
+    /// <summary>The <c>Image</c> component for this <c>InventorySlot</c>'s background.</summary>
+    [SerializeField]
+    private Image background;
 
-    /**The image component of this slot. */
-    private Image slotImage;
+    /// <summary>The Canvas in the scene.</summary>
+    [SerializeField]
+    private Canvas canvas;
 
-    /**The image component of a child GameObject which holds an Item without a background. 
-       null if the slot is empty. Set in Inspector.*/
-    public Image draggableImage;
+    /// <summary>The draggable <c>Image</c> component for this <c>InventorySlot</c>.</summary>
+    [SerializeField]
+    private Image draggable;
 
-    /**A sprite for when the slot is empty.*/
-    public Sprite emptySlotSprite;
+    /// <summary>The GameObject containing the <c>draggable</c> Image component.</summary>
+    [SerializeField]
+    private GameObject itemObject;
 
-    /**A sprite for the slot background */
-    public Sprite defaultSlotSprite;
+    /// <summary>The position of the draggable item when it sits in its slot.</summary>
+    private Vector3 slotPosition;
 
-    /**The Inventory that holds this slot. */
-    public Inventory parentInventory;
+    /// <summary>The InventoryMaster controlling this InventorySlot. </summary>
+    private InventoryMaster master;
 
-    /**A TMP_Text controlled by this slot. Details the amount remaining of the Item it holds. */
-    public TMP_Text numRemainingText;
-
-    /**True if this slot holds no Item, false otherwise. */
-    public bool IsEmpty { get; private set; }
-
-    /**True if this slot is out of Item, false otherwise. */
-    public bool OutOfItem { get; private set; }
-
-    /**Amount of Item remaining in this slot. */
-    public int ItemRemaining { get; set; }
-
-    /**The position this Item's GameObject returns to OnDrop. */
-    public Vector3 ReturnPosition { get; private set; }
-
-    /**The ItemScriptable that the user is dragging; null if the player is dragging nothing */
-    public static ItemScriptable FoodDragging { get; private set; }
+    /// <summary>The CanvasGroup on this InventorySlot. </summary>
+    private CanvasGroup canvasGroup;
 
     private void Start()
     {
-        slotImage = GetComponent<Image>();
-        if (ItemHolding == null) EmptySlot();
-        ReturnPosition = draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition;
+        slotPosition = itemObject.transform.position;
+        canvasGroup = GetComponent<CanvasGroup>();
     }
 
-    private void Update()
+    /// <summary>Assigns a new InventoryMaster to this InventorySlot.
+    /// <br></br><em>Precondition:</em> <c>master</c> is not <c>null</c>.</summary>
+    public void NewMaster(InventoryMaster master)
     {
-        MaintainItemStock();
+        Assert.IsNotNull(master, "Parameter master cannot be null.");
+        this.master = master;
     }
 
-    /**Empties the slot completely, removing the Item inside.*/
-    public void EmptySlot()
-    {
-        ItemHolding = null;
-        slotImage.sprite = emptySlotSprite;
-        draggableImage.gameObject.SetActive(false);
-        IsEmpty = true;
-    }
-
-    /**Updates the slot depending on if there is Item remaining.*/
-    public void MaintainItemStock()
-    {
-        //!!!! Implement these two lines below when ready.
-        //if (ItemRemaining > 0 && OutOfItem) UpdateSlotWithStockedItem();
-        //else if (ItemRemaining < 1 && !OutOfItem) UpdateSlotWithEmptyItem();\
-
-        numRemainingText.text = ItemRemaining.ToString();
-    }
-
-    /**Fills the slot. */
-    public void FillSlot(ItemScriptable itemToSet, int numRemaining = 0)
-    {
-        if (slotImage == null) slotImage = GetComponent<Image>();
-        ItemHolding = itemToSet;
-        ItemRemaining = numRemaining;
-        draggableImage.gameObject.SetActive(true);
-        slotImage.sprite = itemToSet.slotBackground;
-        UpdateSlotWithStockedItem();
-        IsEmpty = false;
-    }
-
-
-
-    /**Updates the slot to show the item, ready to drag. */
-    private void UpdateSlotWithStockedItem()
-    {
-        draggableImage.sprite = ItemHolding.draggableSprite;
-        OutOfItem = false;
-    }
-
-    /**Updates the slot to show the item greyed out and unable to drag. */
-    private void UpdateSlotWithEmptyItem()
-    {
-        OutOfItem = true;
-        draggableImage.sprite = ItemHolding.greyDraggableSprite;
-    }
-
-
-    /**Drags this draggable Image sprite. */
     public void OnDrag(PointerEventData eventData)
     {
+        canvasGroup.blocksRaycasts = false;
         CameraControl.CanDragCamera = false;
-        draggableImage.gameObject.transform.position = Input.mousePosition;
-        slotImage.sprite = defaultSlotSprite;
-        FoodDragging = ItemHolding;
-        HighlightAvailableDragSpots(GameGridMaster.MoveablesGameGrid, FoodDragging);
+        itemObject.transform.position = eventData.position;
+        if(!InventoryBackground.OnInventory()) slotItem.OnDragInventory(master.MainGrid());
     }
 
-    /**Drops this draggable Image sprite. */
-    public void OnDrop(PointerEventData eventData)
+    /// <summary>Fills this <c>InventorySlot</c> with <c>item</c>.</summary>
+    /// <br></br><em>Precondition:</em> <c>item</c> is not <c>null</c>.
+    public void FillSlot(Item item)
     {
+        Assert.IsNotNull(item, "Parameter item cannot be null.");
+
+        slotItem = item;
+        background.sprite = item.InventorySlot();
+        draggable.sprite = item.InventorySprite();
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        canvasGroup.blocksRaycasts = true;
         CameraControl.CanDragCamera = true;
-        draggableImage.gameObject.GetComponent<RectTransform>().anchoredPosition = ReturnPosition;
-        UnHighlightAvailableDragSpots(GameGridMaster.MoveablesGameGrid);
-
-        if (ListenerTile.MoveablesItemHovering != null && ListenerTile.MoveablesItemHovering.TakeDraggedItem(ItemHolding))
+        itemObject.transform.position = slotPosition;
+        master.MainGrid().UnHighlightTiles();
+        if (!InventoryBackground.OnInventory())
         {
-            ItemRemaining = parentInventory.DecrementItem(ItemHolding);
-        }
-        slotImage.sprite = ItemHolding.slotBackground;
-        FoodDragging = null;
-    }
-
-
-    /**Returns true if this slot's Food can be dragged. False otherwise. */
-    private bool CanDrag()
-    {
-        return true;
-    }
-
-    private void HighlightAvailableDragSpots(GameGrid grid, ItemScriptable itemBeingDragged)
-    {
-        foreach(GameTile tile in grid.GridArray)
-        {
-            if(tile.Occupied && tile.objectHolding.GetComponent<FluidItem>() != null)
-            {
-                FluidItem fluidItem = tile.objectHolding.GetComponent<FluidItem>();
-                if (fluidItem.CanDragTo(itemBeingDragged)) fluidItem.ColorTileAsDragAvailable();
-            }
+            slotItem.OnDropInventory(master.MainGrid());
         }
     }
-
-    private void UnHighlightAvailableDragSpots(GameGrid grid)
-    {
-        foreach (GameTile tile in grid.GridArray)
-        {
-            if (tile.Occupied && tile.objectHolding.GetComponent<FluidItem>() != null)
-            {
-                FluidItem fluidItem = tile.objectHolding.GetComponent<FluidItem>();
-                fluidItem.ColorTileAsDefault();
-            }
-        }
-    }
-
-
-
-
-
-
 }
