@@ -21,5 +21,4 @@ public interface IMoveable
     public string Name();
 
     /// <summary><strong>Returns:</strong> The range of this IMoveable's LineRenderer, or -1 if it does not have one.</summary>
-    public int AttachRange(); //DELETE ME WHEN FINISHED WITH ICONNECTABLE AND CONNECTOR!
 }

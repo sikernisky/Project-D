@@ -11,8 +11,8 @@ public class PlayerData
     public int currentLevel;
 
     /// <summary>The list of <c>Items</c> to load in the <c>Inventory</c>.</summary>
-    public List<Item> nextInventory = new List<Item>() { new Strawberry(), new DefaultConveyor(), new CutStationInventory(),
-    new Umbrella(), new SquareTable()};
+    public List<Item> nextInventory = new List<Item>() { new Strawberry(), new DefaultConveyor(), new CutStation(),
+    new Umbrella(), new SquareTable(), new WoodenFence()};
 
     /// <summary>All unlocked Container Items. These will always be loaded into the next inventory. </summary>
     public List<Item> unlockedContainers = new List<Item>() { new Plate() };

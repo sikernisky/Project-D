@@ -21,6 +21,10 @@ public class GridMaster : MonoBehaviour
     [SerializeField]
     private int gridSize;
 
+    /// <summary>Size of the spawned TileGrid's customer area. </summary>
+    [SerializeField]
+    private int customerAreaSize;
+
     /// <summary>The InventoryMaster in the scene. </summary>
     [SerializeField]
     private InventoryMaster inventoryMaster;
@@ -40,7 +44,7 @@ public class GridMaster : MonoBehaviour
 
     void Awake()
     {
-        TileGrid grid = new TileGrid("TestGrid", 18, gameObject.transform, groundTileSprites, ConstructPreSpawnDictionary());
+        TileGrid grid = new TileGrid("TestGrid", 18, gameObject.transform, groundTileSprites, ConstructPreSpawnDictionary(), customerAreaSize);
         inventoryMaster.SetGrid(grid);
         mainCamera.SetGrid(grid);
     }

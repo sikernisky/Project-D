@@ -27,7 +27,7 @@ public abstract class Item
     /// <summary><strong>Returns:</strong> the Sprite representing this <c>Item</c> in the Inventory.</summary>
     public Sprite InventorySprite()
     {
-        Sprite[] sprites = Resources.LoadAll<Sprite>("Inventory/Components/" + itemName);
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Inventory/Components/" + Name());
         return sprites[0];
     }
 
@@ -41,8 +41,14 @@ public abstract class Item
     /// <summary><strong>Returns:</strong> the slot Sprite backing this <c>Item</c> in the Inventory.</summary>
     public Sprite InventorySlot()
     {
-        Sprite[] sprites = Resources.LoadAll<Sprite>("Inventory/Components/" + itemName);
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Inventory/Components/" + Name());
         return sprites[2];
+    }
+
+    /// <summary>This Item's Sprite when it crashes/breaks. </summary>
+    public Sprite BreakSprite()
+    {
+        return Resources.Load<Sprite>("BreakSprites/Broken" + Name());
     }
 
     /// <summary>Do something when dragged from the Inventory.

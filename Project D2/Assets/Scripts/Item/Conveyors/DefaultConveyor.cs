@@ -83,8 +83,4 @@ public class DefaultConveyor : Item, IPlaceable, IMoveable
         return;
     }
 
-    public int AttachRange()
-    {
-        return -1;
-    }
 }

@@ -197,9 +197,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connector: {fileID: -5941792854489461380}
   canConnectTo: 0
-  moveTicks: 16
+  needsPower: 0
+  canRotate: 0
+  moveTicks: 300
   movementAnimTrack: []
   moveOnStart: 0
+  holdItems: 0
 --- !u!114 &-5941792854489461380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,5 +216,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   structure: {fileID: 23991390446516126}
-  maxConnectors: 2
+  maxConnectors: 1
   lineRenderer: {fileID: 7197607203881167573}

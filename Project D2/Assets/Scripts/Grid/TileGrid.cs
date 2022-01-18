@@ -44,24 +44,28 @@ public class TileGrid
     ///<br></br><c>parent</c>: The parent transform of all Tiles in this TileGrid.
     ///<br></br><c>tSprites</c>: Possible Sprites a Tile may be assigned.
     ///<br></br><c>preSpawns</c>: Each IPlaceable key is spawned at all of its Vector2Int values.
+    ///<br></br><c>customerHeight</c>: The height of this TileGrid's customer area.
     ///<br></br><em>Precondition:</em> <c>name</c> is not null.
     ///<br></br><em>Precondition:</em> <c>size</c> must be even and > 0.
     ///<br></br><em>Precondition:</em> <c>parent</c> is not null.
     ///<br></br><em>Precondition:</em> <c>tSprites</c> is not null.
     ///<br></br><em>Precondition:</em> <c>preSpawns</c> and its keys and values are not null.
+    ///<br></br><em>Precondition:</em> <c>customerHeight</c> is greater than zero and less than or equal to <c>size</c>.
     /// </summary>
-    public TileGrid(string name, int size, Transform parent, List<Sprite> tSprites, Dictionary<IPlaceable, List<Vector2Int>> preSpawns)
+    public TileGrid(string name, int size, Transform parent, List<Sprite> tSprites, Dictionary<IPlaceable, List<Vector2Int>> preSpawns, int customerHeight)
     {
         Assert.IsNotNull(name, "Parameter name cannot be null.");
         Assert.IsTrue(size % 2 == 0 && size > 1, "Parameter size must be even and > 0.");
         Assert.IsNotNull(parent, "Parameter parent cannot be null.");
         Assert.IsNotNull(name, "Parameter tSprites cannot be null.");
         Assert.IsFalse(IsPreSpawnsNull(preSpawns), "Parameter preSpawns and its keys and values cannot be null.");
+        Assert.IsTrue(customerHeight > 0 && customerHeight <= size, "Customer area height must be > 0 and <= size.");
         gridName = name;
         gridSize = size;
         highligtedTiles = new HashSet<Tile>();
         ConstructGrid(parent, tSprites);
         SpawnStructures(preSpawns);
+        ConstructCustomerArea(customerHeight);
     }
 
     ///<summary> Constructs a TileGrid of Tile objects under <c>parent</c> in the Hierarchy.
@@ -92,6 +96,23 @@ public class TileGrid
             }
         }
         SetTileNeighbors();
+    }
+
+    /// <summary>Creates a customer area <c>height</c> Tiles tall starting from the top of this TileGrid.
+    /// <br></br>This area crosses the entire grid horizontally.
+    /// <br></br><em>Precondition:</em> <c>height</c> is greater than 0 and less or equal to than grid size.</summary>
+    private void ConstructCustomerArea(int height)
+    {
+        Assert.IsTrue(height > 0 && height <= gridSize, "Customer area must be larger than 0 and less than the grid's size.");
+        for(int x = 0; x < gridSize * tileSize; x += tileSize)
+        {
+            int yStart = (gridSize * tileSize) - tileSize;
+            for (int y = yStart; y > yStart - height * tileSize; y-= tileSize)
+            {
+                Tile t = TileByLoc(new Vector2Int(x, y));
+                t.SetAsCustomerTile(Resources.Load<Sprite>("Tiles/WoodFloor"));
+            }
+        }
     }
     
     /// <summary><strong>Returns:</strong> true if <c>preSpawns</c> and each of its keys and values is not <c>null</c>.</summary>

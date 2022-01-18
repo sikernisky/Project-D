@@ -13,19 +13,10 @@ public class Station : Mover
     private HashSet<Mover> nextMovers = new HashSet<Mover>();
 
     /// <summary>Finds this Station's next Mover in the movement chain.
-    /// <br></br>This is determined by a random Mover in <c>nextMovers</c>.</summary>
+    /// <br></br>This is determined by a random Mover that this Station attaches to.</summary>
     protected override void FindNextMover()
     {
-        FindSurroundingMovers();
-        if (nextMovers.Count == 0) SetNextMover(default);
-        else if(NextMover() == null)
-        {
-            foreach(Mover m in nextMovers)
-            {
-                SetNextMover(m);
-                break;
-            }
-        }
+        return; // No logic is needed here, but we must override Mover.FindNextMover().
     }
 
     /// <summary>Finds the possibly empty set of Movers surrounding this Station, 
@@ -47,6 +38,7 @@ public class Station : Mover
     public override void OnPlace(IPlaceable p)
     {
         base.OnPlace(p);
+        ShouldHoldItems(true);
     }
 
 

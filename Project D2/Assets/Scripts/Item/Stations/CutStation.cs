@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class CutStationInventory : StationInventory
+public class CutStation : StationInventory
 {
-    public CutStationInventory() : base("CutStation", new Vector2Int(3,2)) { }
+    public CutStation() : base("CutStation", new Vector2Int(3,2)) { }
 
     public override Direction Direction()
     {
@@ -44,8 +44,8 @@ public class CutStationInventory : StationInventory
         return;
     }
 
-    public override int AttachRange()
+    public override Vector2Int AttachRange()
     {
-        return 1;
+        return new Vector2Int(1, 1);
     }
 }

@@ -44,6 +44,14 @@ public class Structure : MonoBehaviour
     /// <summary>true if a PowerSource is connecting to this Mover.</summary>
     private bool powered;
 
+    /// <summary>true if this Mover needs to be connected to a PowerStructure to move ItemBoxes.</summary>
+    [SerializeField]
+    private bool needsPower;
+
+    /// <summary>true if this Mover can rotate 90 degrees right when clicked. </summary>
+    [SerializeField]
+    private bool canRotate;
+
 
     /// <summary>Adds a Tile <c>t</c> to the HashSet of Tiles that this Structure is occupying.
     /// <br></br><em>Precondition:</em> <c>t</c> is not <c>null</c>. </summary>
@@ -75,6 +83,27 @@ public class Structure : MonoBehaviour
         return ob;
     }
 
+    /// <summary><strong>Returns:</strong> true if this Structure requires power to function. </summary>
+    protected bool UsesPower()
+    {
+        return needsPower;
+    }
+
+
+    /// <summary><strong>Returns:</strong> true if this Structure is able to rotate. </summary>
+    protected bool Rotatable()
+    {
+        return canRotate;
+    }
+
+    /// <summary><strong>Returns:</strong> true if Connector <c>c</c> already has a line connected to this Structure.
+    /// <br></br>Otherwise, returns false.</summary>
+    public bool AlreadyAttached(Connector c)
+    {
+        if (attachedConnectors.Contains(c)) return true;
+        return false;
+    }
+
 
     /// <summary>Removes this Structure's <c>ob</c> from the scene. </summary>
     public void DestroyAttachedObject()
@@ -99,7 +128,7 @@ public class Structure : MonoBehaviour
     public void AddAttachedConnector(Connector c)
     {
         Assert.IsNotNull(c, "Paramter c cannot be null.");
-        Assert.IsFalse(attachedConnectors.Contains(c), "Connector c cannot already exist in this Structure's attachedConnectors.");
+        Assert.IsFalse(AlreadyAttached(c), "Connector c cannot already exist in this Structure's attachedConnectors.");
         attachedConnectors.Add(c);
     }
 
@@ -109,7 +138,7 @@ public class Structure : MonoBehaviour
     public void RemoveAttachedConnector(Connector c)
     {
         Assert.IsNotNull(c, "Paramter c cannot be null.");
-        Assert.IsTrue(attachedConnectors.Contains(c), "Connector c must exist in this Structure's attachedConnectors.");
+        Assert.IsTrue(AlreadyAttached(c), "Connector c must exist in this Structure's attachedConnectors.");
         attachedConnectors.Remove(c);
     }
 
@@ -121,6 +150,12 @@ public class Structure : MonoBehaviour
         Connector c = attachedConnectors[0];
         attachedConnectors.RemoveAt(0);
         return c;
+    }
+
+    /// <summary><strong>Returns:</strong> the Connector component attached to this Structure, or <c>null</c> if it doesn't have one.</summary>
+    protected Connector MyConnector()
+    {
+        return connector;
     }
 
     /// <summary>Sets the Item this Structure is representing.
@@ -171,6 +206,16 @@ public class Structure : MonoBehaviour
     protected HashSet<Tile> Occupying()
     {
         return new HashSet<Tile>(occupyingTiles);
+    }
+
+    /// <summary><strong>Returns:</strong> a random Tile this Structure occupies.</summary>
+    protected Tile RandomOccupying()
+    {
+        foreach(Tile t in Occupying())
+        {
+            return t;
+        }
+        return null; // Never executed, keeps C# happy
     }
 
     /// <summary><strong>Returns:</strong> a copy of the HashSet of Tiles that surrounds this Structure's occupying Tiles.</summary>
@@ -228,6 +273,7 @@ public class Structure : MonoBehaviour
         SetSurroundingTiles();
         bounds = p.Bounds();
         placeable = p;
+        item = p as Item;
     }
 
     /// <summary><strong>Returns:</strong> this Structure's SpriteRenderer component. </summary>
@@ -272,14 +318,37 @@ public class Structure : MonoBehaviour
     public virtual void PowerOn()
     {
         powered = true;
-        Debug.Log("I have a power source!");
     }
 
     /// <summary>Does something when this Structure loses all power. a</summary>
     public virtual void PowerOff()
     {
-        Debug.Log("I lost my power source!");
         powered = false;
+    }
+
+
+    /// <summary>Does something when the player presses the left arrow key.</summary>
+    public virtual void OnLeftKeyDown()
+    {
+        return;
+    }
+
+    /// <summary>Does something when the player presses the right arrow key.</summary>
+    public virtual void OnRightKeyDown()
+    {
+        return;
+    }
+
+    /// <summary>Does something when the player presses the top arrow key.</summary>
+    public virtual void OnTopKeyDown()
+    {
+        return;
+    }
+
+    /// <summary>Does something when the player presses the bot arrow key.</summary>
+    public virtual void OnBotKeyDown()
+    {
+        return;
     }
 
 
@@ -296,7 +365,7 @@ public class Structure : MonoBehaviour
         if(c != null)
         {
             if (c == connector) c.DropLine();
-            else if (Connectable()) c.AttachLine(this);
+            else if (Connectable() && !attachedConnectors.Contains(c)) c.AttachLine(this);
             else if (!c.IsDraggingLine() && connector != null) connector.OnClick(t, this);
         }
         else
@@ -305,6 +374,24 @@ public class Structure : MonoBehaviour
             else if (connector != null) connector.OnClick(t, this);
         }
     }
+
+    /// <summary>Rotates this Structure by <c>degrees</c> amount to the left.
+    /// <br></br><em>Precondition:</em> <c>degrees</c> falls between -360 and 360. </summary>
+    protected void Rotate(int degrees)
+    {
+        Assert.IsTrue(degrees >= -360 && degrees <= 360, "Parameter degrees must exist in [-360,360].");
+        transform.Rotate(0, 0, degrees);
+    }
+
+    /// <summary>Rotates this Structure so that it faces Direction <c>d</c>.</summary>
+    protected virtual void RotateDirection(Direction d)
+    {
+        if (d == Direction.North) transform.rotation = Quaternion.Euler(0, 0, 0);
+        if (d == Direction.East) transform.rotation = Quaternion.Euler(0, 0, -90);
+        if (d == Direction.South) transform.rotation = Quaternion.Euler(0, 0, 180);
+        if (d == Direction.West) transform.rotation = Quaternion.Euler(0, 0, 90);
+    }
+
 
     /// <summary><strong>Returns:</strong> true if a Connector is allowed to attach onto this Structure.</summary>
     public bool Connectable()

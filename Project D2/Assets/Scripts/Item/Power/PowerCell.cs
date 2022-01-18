@@ -7,9 +7,9 @@ public class PowerCell : Item, IPlaceable, IConnectable
 {
     public PowerCell() : base("PowerCell") { }
 
-    public int AttachRange()
+    public Vector2Int AttachRange()
     {
-        return 1;
+        return new Vector2Int(2,2);
     }
 
     public Vector2Int Bounds()

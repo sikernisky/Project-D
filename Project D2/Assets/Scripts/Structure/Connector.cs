@@ -30,6 +30,9 @@ public class Connector : MonoBehaviour
     /// <summary> The start and end vertices of the line the player is currently dragging; (-1, -1) if they aren't. </summary>
     private Vector2Int verticesDragging = new Vector2Int(-1, -1);
 
+    /// <summary> The number of lines this Connector currently connects to other Structures. </summary>
+    private int numActiveConnections;
+
     public void OnClick(Tile t, Structure s)
     {
         if (IsDraggingLine()) //Already dragging and clicks on this Connector again
@@ -93,24 +96,43 @@ public class Connector : MonoBehaviour
         Assert.IsTrue(AreValidVertices(vertices), "Paramter vertices with X: " + vertices.x + " and Y: " + vertices.y + " is not valid.");
         Assert.IsTrue(IsDraggingLine());
         lineRenderer.SetPosition(vertices.x, GameObjectPosition());
-        lineRenderer.SetPosition(vertices.y, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        lineRenderer.SetPosition(vertices.y, KeepLineInRange(Camera.main.ScreenToWorldPoint(Input.mousePosition)));
     }
 
-    /// <summary>Attaches the line this Connector is dragging to Structure s.
+    /// <summary>Attaches the line this Connector is dragging to Structure <c>s</c>.
     /// <br></br><em>Precondition: </em><c>s</c> is not <c>null</c>.
-    /// <br></br><em>Precondition: <c>s</c> has an existing connection from itself to itself.
+    /// <br></br><em>Precondition:</em> <c>s</c> has an existing connection from itself to itself.
+    /// <br></br><em>Precondition:</em> this Connector has no lines attached to <c>s</c>.
     /// <br></br><em>Precondition:</em> the player is dragging a line.</summary>
     public void AttachLine(Structure s)
     {
         Assert.IsNotNull(s, "Parameter s cannot be null.");
         Assert.IsTrue(IsDraggingLine(), "You cannot call AttachLine() because you are not dragging a line.");
         Assert.IsTrue(connections.ContainsKey(verticesDragging), "This pair of vertices is not in connections.");
+        Assert.IsFalse(s.AlreadyAttached(this), "This Connector is already attached to Structure s.");
         s.AddAttachedConnector(this);
+        IncrementActiveConnectionCount();
         UpdateConnection(verticesDragging, s);
         s.OnConnect(this);
         lineRenderer.SetPosition(verticesDragging.x, GameObjectPosition());
         lineRenderer.SetPosition(verticesDragging.y, s.StructPos());
         RemoveVerticesDragging();
+    }
+
+    /// <summary>Immediately creates and attaches a line from this Connector to Structure <c>s</c>.
+    /// <br></br><em>Precondition:</em> <c>s</c> is not <c>null</c>.
+    /// <br></br><em>Precondition:</em> this Connector has no lines attached to <c>s</c>.
+    /// <br></br><em>Precondition:</em> this Connector has not reached its line limit (maxConnectors).
+    public void AttachLineImmediate(Structure s)
+    {
+        Assert.IsNotNull(s, "Parameter s cannot be null.");
+        Assert.IsFalse(s.AlreadyAttached(this), "This Connector is already attached to Structure s.");
+        Assert.IsTrue(numActiveConnections < maxConnectors, "This Connector has no lines left.");
+        s.AddAttachedConnector(this);
+        IncrementActiveConnectionCount();
+        AddConnection(verticesDragging, s);
+        lineRenderer.SetPosition(verticesDragging.x, GameObjectPosition());
+        lineRenderer.SetPosition(verticesDragging.y, s.StructPos());
     }
 
     /// <summary>Picks up and starts dragging a line already connected to <c>s</c> from <c>s</c>.
@@ -123,9 +145,34 @@ public class Connector : MonoBehaviour
         Assert.IsTrue(AreValidVertices(GetExistingConnection(s)), "There is no connection from this Connector to Structure s.");
         Assert.IsFalse(IsDraggingLine(), "You cannot call PickupLine() because the player is already dragging a line.");
         Vector2Int vertices = GetExistingConnection(s);
+        DecrementActiveConnectionCount();
         UpdateConnection(vertices, structure);
         s.OnPickup(this);
         StartDragLine(vertices);
+    }
+
+    /// <summary><strong>Returns:</strong> a clamped Vector3 based on this Connector's attach range.
+    /// <br></br><em>Precondition:</em> the player is dragging a line.</summary>
+    private Vector3 KeepLineInRange(Vector3 p)
+    {
+        Assert.IsTrue(AreValidVertices(verticesDragging), "You are not dragging a line.");
+
+        int connectorWidth = structure.Placeable().Bounds().x;
+        int connectorHeight = structure.Placeable().Bounds().y;
+        int connectorRangeY = connectable.AttachRange().y;
+        int connectorRangeX = connectable.AttachRange().x;
+        Vector3 connectorPos = transform.position;
+
+        float topBound = connectorPos.y + (connectorHeight / 2) + connectorRangeY;
+        float botBound = connectorPos.y - (connectorHeight / 2) - connectorRangeY;
+        float rightBound = connectorPos.x + (connectorWidth / 2) + connectorRangeX;
+        float leftBound = connectorPos.x - (connectorWidth / 2) - connectorRangeX;
+
+
+        Vector3 clampedPos = new Vector3(Mathf.Clamp(p.x, leftBound, rightBound), Mathf.Clamp(p.y, botBound, topBound),
+            p.z);
+
+        return clampedPos;
     }
 
     /// <summary>Adds a connection to this Connector's Dictionary of connections.
@@ -159,6 +206,23 @@ public class Connector : MonoBehaviour
     {
         Assert.IsTrue(connections.ContainsKey(vertices), "This Connector does not have this pair of vertices as a connection.");
         connections.Remove(vertices);
+    }
+    
+    /// <summary>Increments <c>numActiveConnections</c> by one.
+    /// <br></br><em>Precondition:</em> <c>numActiveConnections</c> is less than maxConnectors.</summary>
+    private void IncrementActiveConnectionCount()
+    {
+        Assert.IsTrue(numActiveConnections < maxConnectors, "You cannot increment the number of active connections because you have"
+            + " reached the limit");
+        numActiveConnections++;
+    }
+
+    /// <summary>Decrements <c>numActiveConnections</c> by one.
+    /// <br></br><em>Precondition:</em> <c>numActiveConnections</c> is greater than zero.</summary>
+    private void DecrementActiveConnectionCount()
+    {
+        Assert.IsTrue(numActiveConnections > 0, "You cannot decrement the number of active connections because none exist.");
+        numActiveConnections--;
     }
 
     /// <summary><strong>Returns:</strong> The position of the GameObject this Connector component is attached to. </summary>

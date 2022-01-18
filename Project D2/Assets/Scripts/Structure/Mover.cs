@@ -9,15 +9,10 @@ using UnityEngine.Assertions;
 public class Mover : Structure
 {
     /// <summary>The delay between each tick of this Mover's animations. </summary>
-    private readonly float animDelay = .075f;
+    private readonly float animDelay = .085f;
 
-    /// <summary>The number of position increments an item goes through while moving across this Mover. </summary>
-    [SerializeField]
-    private int moveTicks;
-
-    /// <summary>true if this Mover needs to be connected to a PowerStructure to move ItemBoxes.</summary>
-    [SerializeField]
-    private bool needsPower;
+    /// <summary>The delay between each positional increment of a moved item. Smaller = faster. </summary>
+    private readonly float moveSpeed = .001f;
 
     /// <summary>The <c>IMoveable</c> this Mover is imitating.</summary>
     private IMoveable controller;
@@ -48,6 +43,18 @@ public class Mover : Structure
     /// <summary>The Mover that comes after this Mover; <c>null</c> if this Mover is the last.</summary>
     private Mover nextMover;
 
+    /// <summary>true if this Mover holds items instead of crashing them if there is no next target. </summary>
+    [SerializeField]
+    private bool holdItems;
+
+    /// <summary>true if this Mover stops ItemBoxes at least once before sending them further. </summary>
+    [SerializeField]
+    private bool stopItems;
+
+    /// <summary>true if this Mover finds its Next Mover when it is placed. </summary>
+    [SerializeField]
+    private bool autoSetNextMover;
+
 
 
     /// <summary>Plays this Mover's movement animation if its track is not empty or <c>null</c>.</summary>
@@ -63,23 +70,32 @@ public class Mover : Structure
         }
     }
 
-    /// <summary>Moves a transform across this mover towards target.</summary>
-    IEnumerator MoveItemBoxAcross(ItemBox ib)
+    /// <summary>Moves a transform across this mover towards target and breaks it if <c>breakAfter</c> is true.</summary>
+    IEnumerator MoveItemBoxAcross(ItemBox ib, Mover target)
     {
-        Mover target = NextMover();
-        Vector3 targetPos = target.StructPos();
-        Transform ibTransform = ib.transform;
+        AddBoxMoving(ib);
+        Vector3 targetPos;
+        if (target == null) targetPos = ContainerCrashLocation();
+        else targetPos = target.StructPos();
+        Transform ibPos = ib.transform;
 
-        Vector3 movementPerTick = (targetPos - ibTransform.position) / moveTicks;
+        Vector3 totalDistance = targetPos - ibPos.position;
+        Vector3 movementPerTick = totalDistance / 250;
 
-        for(int i = 0; i < moveTicks; i++)
+        while(Vector3.Distance(ibPos.position + movementPerTick, targetPos) > .001)
         {
-            ibTransform.position += movementPerTick;
-            yield return new WaitForSeconds(animDelay);
+            ibPos.position += movementPerTick;
+            yield return new WaitForSeconds(moveSpeed);
         }
-        GiveToNextMover(ib);
+
+        FindNextMover();
+        if (NextMover() == null) Break(ib);
+        else GiveToNextMover(ib, target);
 
     }
+
+
+
 
     /// <summary>Stops this Mover's movement animation.
     /// <br></br><em>Precondition:</em> the movement animation is already playing.</summary>
@@ -112,30 +128,29 @@ public class Mover : Structure
     public void MoveAcross(ItemBox ib)
     {
         Assert.IsNotNull(ib, "Parameter ib cannot be null.");
-        if (needsPower) Assert.IsTrue(HasPowerSource());
+        if (UsesPower()) Assert.IsTrue(HasPowerSource());
         Assert.IsTrue(itemBoxesQueued.Contains(ib));
-
-        Mover next = NextMover();
         RemoveBoxQueued(ib);
-        AddBoxMoving(ib);
-        if (next == null)
-        {
-            Break(ib); // Destroy the ItemBox if there's no Mover to accept it.
-            return;
-        }
-        StartCoroutine(MoveItemBoxAcross(ib));
+        Mover next = NextMover();
+        if (ib.IsMoving()) ib.StopMovementAnimation();
+        ib.StartMovementAnimation(MoveItemBoxAcross(ib, next));
     }
 
     /// <summary>Gives this ItemBox to the next Mover. If <c>nextMover</c> is null, completes [LOGIC].
     /// <br></br><em>Precondition:</em> <c>ib</c> is not <c>null</c>.
     /// <br></br><em>Precondition:</em> <c>ib</c> is in field <c>itemBoxesMoving</c>.</summary>
 
-    private void GiveToNextMover(ItemBox ib)
+    private void GiveToNextMover(ItemBox ib, Mover m)
     {
         Assert.IsNotNull(ib, "Parameter ib cannot be null.");
         Assert.IsTrue(itemBoxesMoving.Contains(ib), "Parameter ib must exist in field itemBoxesMoving.");
-        RemoveBoxMoving(ib);
-        NextMover().AcceptMovedItem(ib);
+        if (m != null)
+        {
+            RemoveBoxMoving(ib);
+            m.AcceptMovedItem(ib);
+        }
+        else Break(ib);
+
     }
 
     /// <summary><strong>Returns:</strong> true if this Mover is moving.</summary>
@@ -153,9 +168,42 @@ public class Mover : Structure
     /// <summary> Destroys the ItemBox this Mover is holding.</summary>
     private void Break(ItemBox ib)
     {
-        Debug.Log("Breaking ib");
-        Destroy(ib.gameObject);
+        StartCoroutine(BreakDelay(ib));
+    }
+
+    /// <summary><strong>Returns:</strong> true if this Mover stops ItemBoxes before sending them further.</summary>
+    protected bool StopsItems()
+    {
+        return stopItems;
+    }
+
+    /// <summary>Waits and then destroys <c>ib</c>.</summary>
+    IEnumerator BreakDelay(ItemBox ib)
+    {
+        Debug.Log("In BreakDelay");
+        ib.SetMovementAvailability(false);
+        int ticks = 10;
+        int scaleReduction = 3;
+        float delay = .01f;
+        Vector3 totalSizeDec = ib.transform.localScale / scaleReduction;
+        Vector3 sizeDec = totalSizeDec / ticks;
+        for(int i = 0; i < ticks; i++)
+        {
+            yield return new WaitForSeconds(delay);
+            FindNextMover();
+            if (NextMover() != null)
+            {
+                ib.transform.localScale = new Vector3(1, 1, 1);
+                ib.SetMovementAvailability(true);
+                GiveToNextMover(ib, NextMover());
+                yield break;
+            }
+            ib.transform.localScale -= sizeDec;
+        }
+        ib.BreakItem();
         RemoveBoxMoving(ib);
+        yield return new WaitForSeconds(.5f);
+        Destroy(ib.gameObject);
     }
 
     /// <summary>Sets this Mover's controller.
@@ -187,40 +235,13 @@ public class Mover : Structure
     public override ItemBox TakeItem(ItemBox ib)
     {
         ItemBox takenBox = base.TakeItem(ib);
+        if(!ib.CanChangeMovement()) ib.SetMovementAvailability(true);
         AddBoxQueued(ib);
-        if ((HasPowerSource() && needsPower) || !needsPower) MoveAcross(ib);
+        if ((HasPowerSource() && UsesPower()) || !UsesPower()) MoveAcross(ib);
         return ib;
     }
 
-    /// <summary>Calls <c>Structure.OnPlace()</c> and finds this Mover's <c>nextMover</c>. </summary>
-    public override void OnPlace(IPlaceable p)
-    {
-        base.OnPlace(p);
-        if (p is IMoveable) controller = (IMoveable)p;
-        FindNextMover();
-        foreach(Tile t in Surrounding())
-        {
-            if(t.IsOccupied() && t.Structure() is Mover)
-            {
-                Mover m = (Mover)t.Structure();
-                m.FindNextMover();
-            }
-        }
-    }
 
-
-    /// <summary><strong>Returns:</strong> true if Mover <c>m</c> is in Range of this Mover's LineRenderer.</summary>
-    protected bool InRange(Mover m)
-    {
-        if (controller.AttachRange() < 1) return false;
-        HashSet<Tile> surr = FindSurroundingTiles(controller.AttachRange());
-        HashSet<Tile> mOcc = m.Occupying();
-        foreach(Tile t in mOcc)
-        {
-            if (surr.Contains(t)) return true;
-        }
-        return false;
-    }
 
     /// <summary><strong>Returns:</strong> the Tile this Mover is on. 
     /// <br></br><em>Precondition:</em> this Mover occupies only one Tile.</summary>
@@ -231,44 +252,61 @@ public class Mover : Structure
         return null;
     }
 
+    /// <summary><strong>Returns:</strong> the location for an ItemBox to crash after leaving this Mover. 
+    /// <br></br>If this Mover occupies one tile, the crash location is the next neighbor in its Direction. If it occupies more
+    /// <br></br>than one tile, its crash location is itself. 
+    /// </summary>
+    private Vector3 ContainerCrashLocation()
+    {
+        if (Occupying().Count == 1)
+        {
+            Tile t = TileOn();
+            if (Direction() == global::Direction.North) return t.NorthernNeighbor().transform.position;
+            if (Direction() == global::Direction.East) return t.EasternNeighbor().transform.position;
+            if (Direction() == global::Direction.South) return t.SouthernNeighbor().transform.position;
+            if (Direction() == global::Direction.West) return t.WesternNeighbor().transform.position;
+            return Vector3.zero; //Never executed, keeps C# happy
+        }
+        else return StructPos();
+    }
+
     /// <summary><strong>Returns:</strong> the next Mover in this movement chain, or <c>null</c> if there isn't one.  
     /// <br></br>The next Mover is determined by the next Tile in this Mover's Direction.
     /// <br></br><em>Precondition:</em> This Structure occupies only one Tile.</summary>
     protected virtual void FindNextMover()
     {
         Assert.IsTrue(Occupying().Count == 1, "You cannot call FindNextMover() because this Mover occupies more than one Tile.");
-        Tile occ = null;
-        occ = TileOn(); // Guaranteed to be the only one.
+        Tile occ = TileOn();
+        SetNextMover(null);
+        foreach(Tile t in Surrounding())
+        {
+            Structure s = t.Structure();
+            Mover w = null;
+            if(s != null) w = s as Mover;
+            if (w != null && MakesMovementProgress(w)) 
+            {
+                SetNextMover(w);
+                break;
+            } 
+        }
+    }
+
+    /// <summary><strong>Returns:</strong> true if <c>w</c> shares its Direction with this Mover and makes progres
+    /// <br></br>towards that direction.
+    /// <br></br><em>Precondition:</em> <c>w</c> is not <c>null</c>.</summary>
+    private bool MakesMovementProgress(Mover w)
+    {
+        Assert.IsNotNull(w, "Parameter w cannot be null.");
         Direction d = Direction();
-        if (d == global::Direction.North)
-        {
-            if (occ.NorthernNeighbor().IsOccupied() && occ.NorthernNeighbor().Structure() is Mover)
-            {
-                SetNextMover((Mover)occ.NorthernNeighbor().Structure());
-            }
-        }
-        else if (d == global::Direction.East)
-        {
-            if (occ.EasternNeighbor().IsOccupied() && occ.EasternNeighbor().Structure() is Mover)
-            {
-                SetNextMover((Mover)occ.EasternNeighbor().Structure());
-            }
-        }
-        else if (d == global::Direction.South)
-        {
-            if (occ.SouthernNeighbor().IsOccupied() && occ.SouthernNeighbor().Structure() is Mover)
-            {
-                SetNextMover((Mover)occ.SouthernNeighbor().Structure());
-            }
-        }
-        else if (d == global::Direction.West)
-        {
-            if (occ.WesternNeighbor().IsOccupied() && occ.WesternNeighbor().Structure() is Mover)
-            {
-                SetNextMover((Mover)occ.WesternNeighbor().Structure());
-            }
-        }
-        else SetNextMover(default);
+        Vector2Int mCoords = TileOn().Coordinates();
+        Vector2Int wCoords = w.RandomOccupying().Coordinates(); // w might occupy multiple tiles, any random one works.
+
+        if (d == global::Direction.North && wCoords.y > mCoords.y) return true;
+        if (d == global::Direction.East && wCoords.x > mCoords.x) return true;
+        if (d == global::Direction.South && wCoords.y < mCoords.y) return true;
+        if (d == global::Direction.West && wCoords.x < mCoords.x) return true;
+
+        return false;
     }
 
     /// <summary><strong>Returns:</strong> The Mover that will take/recieve an ItemBox moved by this one.</summary>
@@ -321,6 +359,14 @@ public class Mover : Structure
         Renderer().color = c;
     }
 
+    /// <summary><If <c>shouldHold</c> is true, sets this <c>holdItems</c> to true. If false, sets <c>holdItems</c> to false.
+    /// <br></br><em>Precondition:</em> <c>holdItems</c> is false if <c>shouldHold</c> is true and vice versa.</summary>
+    protected void ShouldHoldItems(bool shouldHold)
+    {
+        if (holdItems) Assert.IsFalse(shouldHold, "This mover is already set to hold items.");
+        if (!holdItems) Assert.IsTrue(shouldHold, "This mover is already set to crash items.");
+        holdItems = shouldHold;
+    }
 
 
     private void Start()
@@ -328,9 +374,68 @@ public class Mover : Structure
         if (moveOnStart) StartMovement();
     }
 
+
+    /// <summary>Calls <c>base.OnClick()</c> and then rotates this mover 90 degrees to the left if possible.</summary>
     public override void OnClick(Tile t)
     {
         base.OnClick(t);
+    }
+
+    public override void OnTopKeyDown()
+    {
+        if (Rotatable()) RotateDirection(global::Direction.North);
+    }
+
+    /// <summary>Rotates this Mover 90 degrees to the right if possible.</summary>
+    public override void OnRightKeyDown()
+    {
+        if (Rotatable()) RotateDirection(global::Direction.East);
+    }
+    public override void OnBotKeyDown()
+    {
+        if (Rotatable()) RotateDirection(global::Direction.South);
+    }
+
+    /// <summary>Rotates this Mover 90 degrees to the left if possible.</summary>
+    public override void OnLeftKeyDown()
+    {
+        if (Rotatable()) RotateDirection(global::Direction.West);
+    }
+
+    /// <summary>Sets this Mover's Direction to <c>d</c>.</summary>
+    private void SetDirection(Direction d)
+    {
+        direction = d;
+        FindNextMover();
+    }
+
+
+    /// <summary>Rotates this Mover so that it faces Direction d and sets its movement direction to d.</summary>
+    protected override void RotateDirection(Direction d)
+    {   
+        if(itemBoxesQueued.Count == 0 && itemBoxesMoving.Count == 0)
+        {
+            base.RotateDirection(d);
+            SetDirection(d);
+        }
+
+    }
+
+    /// <summary>Calls <c>Structure.OnPlace()</c> and finds this Mover's <c>nextMover</c>. </summary>
+    public override void OnPlace(IPlaceable p)
+    {
+        base.OnPlace(p);
+        if (p is IMoveable) controller = (IMoveable)p;
+        SetNextMover(null);
+        if (autoSetNextMover) FindNextMover();
+        foreach (Tile t in Surrounding())
+        {
+            if (t.IsOccupied() && t.Structure() is Mover)
+            {
+                Mover m = (Mover)t.Structure();
+                if (m.autoSetNextMover) m.FindNextMover();
+            }
+        }
     }
 
     public override void OnConnect(Connector other)
@@ -339,7 +444,11 @@ public class Mover : Structure
         Mover m = other.GetComponent<Mover>();
         if (m != null) m.SetNextMover(this);
         UpdateMovementAnimation(HasPowerSource());
-        if (HasPowerSource()) ReleaseQueue();
+        if (HasPowerSource() || !UsesPower())
+        {
+            ReleaseQueue();
+            if(m != null) m.ReleaseQueue();
+        }
     }
 
     public override void OnPickup(Connector other)

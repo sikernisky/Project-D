@@ -36,7 +36,7 @@ public class InventoryBackground : MonoBehaviour, IPointerEnterHandler, IPointer
 
     }
 
-    /// <summary><strong>Returns:</strong> true if the user released their mouse on the inventory.</summary>
+    /// <summary><strong>Returns:</strong> true if the user released their mouse on the Inventory.</summary>
     public static bool OnInventory()
     {
         return hoveringInventory;

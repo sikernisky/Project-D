@@ -231,6 +231,7 @@ public class InventoryMaster: MonoBehaviour
         foreach(Item i in tabToRefresh.Items())
         {
             slots[counter].FillSlot(i);
+            counter++;
         }
     }
 

@@ -8,7 +8,7 @@ public class SquareTable : Table, IPlaceable
 
     public override Vector2Int Bounds()
     {
-        throw new System.NotImplementedException();
+        return new Vector2Int(3, 2);
     }
 
     public override ItemBox BoxItem()

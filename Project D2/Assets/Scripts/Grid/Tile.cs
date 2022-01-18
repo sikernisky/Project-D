@@ -40,6 +40,9 @@ public class Tile : MonoBehaviour
     /// <summary> This <c>Tile</c>'s SpriteRenderer.</summary>
     private SpriteRenderer spriteRenderer;
 
+    /// <summary> true if this Tile is part of the customer area. </summary>
+    private bool customerTile;
+
     ///<summary> Spawns a Tile at <c>xPosition</c>, <c>yPosition</c>. Offically spawns the Tile.
     ///<br></br> <em>Precondition:</em>: <c>xPosition</c> and <c>yPosition</c> are valid coordinates.
     ///<br></br> <em>Precondition:</em>: <c>parent</c> is not <c>null</c> and contains this Tile. 
@@ -197,6 +200,17 @@ public class Tile : MonoBehaviour
         spriteRenderer.color = c;
     }
 
+
+    /// <summary>Sets this Tile as a Tile in the customer area. 
+    /// <br></br><em>Precondition:</em> this Tile is not in the customer area.
+    /// <br></br><em>Precondition:</em> <c>tileSprite</c> is not <c>null</c>.</summary>
+    public void SetAsCustomerTile(Sprite tileSprite)
+    {
+        Assert.IsFalse(customerTile, "This tile is already a customer Tile.");
+        customerTile = true;
+        SetTileSprite(tileSprite);
+    }
+
     /// <summary><strong>Returns:</strong> The unique ID of this Tile's occupying Structure.
     /// <br></br><em>Precondition:</em> this Tile is occupied.</summary>
     public long StructureID()
@@ -232,8 +246,24 @@ public class Tile : MonoBehaviour
     private void OnMouseDown()
     {
         Connector c = Connector.ConnectorDragging;
-        if (Structure() != null) Structure().OnClick(this);
-        else if (c != null && c.IsDraggingLine()) c.DropLine();
+        if (!InventoryBackground.OnInventory())
+        {
+            if (Structure() != null) Structure().OnClick(this);
+            else if (c != null && c.IsDraggingLine()) c.DropLine();
+        }
         TileGrid.lastClickedTile = this;
+    }
+
+    private void Update()
+    {
+        Tile hovering = TileGrid.tileHovering;
+        if(hovering != null && hovering.ID() == ID() && Structure() != null)
+        {
+            Structure s = Structure();
+            if (Input.GetKeyDown(KeyCode.UpArrow)) s.OnTopKeyDown();
+            if (Input.GetKeyDown(KeyCode.RightArrow)) s.OnRightKeyDown();
+            if (Input.GetKeyDown(KeyCode.DownArrow)) s.OnBotKeyDown();
+            if (Input.GetKeyDown(KeyCode.LeftArrow)) s.OnLeftKeyDown();
+        }
     }
 }

@@ -23,7 +23,7 @@ public abstract class StationInventory : Item, IConnectable, IPlaceable, IMoveab
         return dimensions;
     }
 
-    public abstract int AttachRange();
+    public abstract Vector2Int AttachRange();
     public abstract void OnPlace();
     public abstract GameObject PrefabObject();
     public abstract Sprite[] MoveAnimation();

@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IConnectable
 {
-    /// <summary><strong>Returns:</strong> The range of this IMoveable's LineRenderer, or -1 if it does not have one.</summary>
-    public int AttachRange();
+    /// <summary><strong>Returns:</strong> The (x,y) range of this IConnectble's LineRenderer. </summary>
+    public Vector2Int AttachRange();
 }

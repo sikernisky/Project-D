@@ -1960,9 +1960,11 @@ MonoBehaviour:
   - {fileID: 4930281995492453304, guid: c8ee1133119b7fd4fb92bae32e66b496, type: 3}
   mainCamera: {fileID: 1502220114}
   gridSize: 0
+  customerAreaSize: 6
   inventoryMaster: {fileID: 118062215}
   powerCellPositions:
-  - {x: 2, y: 2}
+  - {x: 10, y: 10}
+  - {x: 6, y: 6}
 --- !u!4 &967609084
 Transform:
   m_ObjectHideFlags: 0

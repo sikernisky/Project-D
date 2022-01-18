@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   structure: {fileID: -6884139409040008439}
-  maxConnectors: 4
+  maxConnectors: 15
   lineRenderer: {fileID: -5588440410797398537}
 --- !u!114 &-6884139409040008439
 MonoBehaviour:
@@ -212,3 +212,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connector: {fileID: 1127986371061078640}
   canConnectTo: 0
+  needsPower: 0
+  canRotate: 0

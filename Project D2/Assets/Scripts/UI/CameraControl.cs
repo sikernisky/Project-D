@@ -16,10 +16,13 @@ public class CameraControl : MonoBehaviour
     private Vector3 dragStartPos;
 
     ///<summary>The minimum orthographic camera size. </summary>
-    private int minCamSize = 1;
+    private readonly int minCamSize = 1;
 
     ///<summary>The maximum orthographic camera size. </summary>
     private int maxCamSize = 13;
+
+    /// <summary>How quickly this Camera moves to meet the mouse if it touches the screen borders. </summary>
+    private readonly float outBoundsMoveSpeed = .4f;
 
     ///<summary>How much the camera zooms in or out per scroll wheel tick. Set in the inspector for accessibility.</summary>
     [SerializeField]
@@ -58,6 +61,7 @@ public class CameraControl : MonoBehaviour
     {
         if (CanDragCamera) MoveCamera();
         CheckZoom();
+        CheckMove();
     }
 
     /// ///<summary>
@@ -178,6 +182,32 @@ public class CameraControl : MonoBehaviour
             maxCamSize = (int) myCam.orthographicSize;
             ZoomIn(.1f);
         }
+    }
+
+    /// <summary>Moves the camera up, right, down, or left if the mouse is touching one of those borders.</summary>
+    private void CheckMove()
+    {
+        float xMousePos = Input.mousePosition.x;
+        float yMousePos = Input.mousePosition.y;
+        Vector3 camPos = myCam.transform.position;
+
+        if (xMousePos <= 0)
+        {
+            myCam.transform.position = new Vector3(camPos.x - outBoundsMoveSpeed, camPos.y, camPos.z);
+        }
+        if(xMousePos >= Screen.width)
+        {
+            myCam.transform.position = new Vector3(camPos.x + outBoundsMoveSpeed, camPos.y, camPos.z);
+        }
+        if(yMousePos <= 0)
+        {
+            myCam.transform.position = new Vector3(camPos.x, camPos.y - outBoundsMoveSpeed, camPos.z);
+        }
+        if(yMousePos >= Screen.height)
+        {
+            myCam.transform.position = new Vector3(camPos.x, camPos.y + outBoundsMoveSpeed, camPos.z);
+        }
+        PushCameraInBounds();
     }
 
     /// <summary>
